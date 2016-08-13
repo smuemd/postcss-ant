@@ -98,6 +98,10 @@ Flexbox is pretty handy for a number of things, and we all rejoiced when `flex-g
 
 #### Example: <span>Product Listing</span>
 
+<p class="mobile-note">
+  <b>Note:</b> These examples look screwy on mobile because we're using two `150px` elements for demostration purposes. Too lazy to make it pretty for you toilet-bound studiers. Just trust the blocks are there or turn your phone sideways.
+</p>
+
 The first and last item in every row should be `150px`. There are 2 middle items that should fill the remaining space. An implementation with flexbox might look like this:
 
 ```scss

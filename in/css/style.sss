@@ -54,7 +54,6 @@ hr
   background: color(black a(75%))
 
 .sidebar-button
-  @mixin trans
   display: none
   position: fixed
   z-index: 1
@@ -63,21 +62,21 @@ hr
   border-radius: 50%
   top: 22.5px
   right: 22.5px
-  background: color(white a(35%))
+  background: color(white a(75%))
   &.js-active
     background: none
     color: white
     border-color: white
     &:hover
       background: white
-      color: rgb($off-black)
+      color: rgb($light-red)
   outline: none
   font-size: 28px
   line-height: 0
-  border: 2px solid rgb($off-black)
-  color: rgb($off-black)
+  border: 2px solid rgb($light-red)
+  color: rgb($light-red)
   &:hover
-    background: rgb($off-black)
+    background: rgb($light-red)
     color: white
     > span
       > span
@@ -88,7 +87,7 @@ hr
     > span
       display: block
       height: 2px
-      background: rgb($off-black)
+      background: rgb($light-red)
       width: 50%
       margin: auto auto 4px
       &:first-child
@@ -239,6 +238,10 @@ ol
   ol
     margin-bottom: 0
 
+@media (min-width: $bp)
+  .mobile-note
+    display: none
+
 pre,
 code
   font-size: 11px
@@ -249,11 +252,15 @@ code
 
 pre
   display: inline-block
+  max-width: calc(100% - 60px)
+  min-width: calc(100% - 60px)
+  overflow: auto
   padding: 8px 10px
   line-height: 1.5
   font-size: 11px
   margin-bottom: 0
   @media (min-width: $bp)
+    max-width: 100%
     min-width: 50%
   code
     padding: 0
@@ -434,3 +441,24 @@ pre
       margin-right: $gutter
     &:last-child
       width: ant($sizes, $gutter)[2]
+
+[class^="example-loops"]
+  margin-bottom: calc(1em - 5px)
+  > *
+    > *
+      height: 30px
+      border-radius: 5px
+      background: rgb($light-blue)
+      margin-bottom: 5px !important
+      color: white
+      text-align: center
+      line-height: 30px
+
+.example-loops-1
+  .grid
+    @mixin clearfix
+    background: tomato
+  .column
+    float: left
+    width: ant(1/3)[1]
+    margin: 0 15px

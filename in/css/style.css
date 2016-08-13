@@ -43,7 +43,6 @@ hr {
 }
 
 .sidebar-button {
-  transition: all 500ms ease;
   display: none;
   position: fixed;
   z-index: 1;
@@ -52,12 +51,12 @@ hr {
   border-radius: 50%;
   top: 22.5px;
   right: 22.5px;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.75);
   outline: none;
   font-size: 28px;
   line-height: 0;
-  border: 2px solid rgb(34,34,34);
-  color: rgb(34,34,34);
+  border: 2px solid rgb(227,84,84);
+  color: rgb(227,84,84);
 }
 
 .sidebar-button > span {
@@ -68,7 +67,7 @@ hr {
 .sidebar-button > span > span {
   display: block;
   height: 2px;
-  background: rgb(34,34,34);
+  background: rgb(227,84,84);
   width: 50%;
   margin: auto auto 4px;
 }
@@ -85,11 +84,11 @@ hr {
 
 .sidebar-button.js-active:hover {
   background: white;
-  color: rgb(34,34,34);
+  color: rgb(227,84,84);
 }
 
 .sidebar-button:hover {
-  background: rgb(34,34,34);
+  background: rgb(227,84,84);
   color: white;
 }
 
@@ -284,6 +283,12 @@ ul ul, ul ol, ol ul, ol ol {
   margin-bottom: 0;
 }
 
+@media (min-width: 800px) {
+  .mobile-note {
+    display: none;
+  }
+}
+
 pre, code {
   font-size: 11px;
   background: rgb(248, 248, 248);
@@ -294,6 +299,9 @@ pre, code {
 
 pre {
   display: inline-block;
+  max-width: calc(100% - 60px);
+  min-width: calc(100% - 60px);
+  overflow: auto;
   padding: 8px 10px;
   line-height: 1.5;
   font-size: 11px;
@@ -308,6 +316,7 @@ pre code {
 
 @media (min-width: 800px) {
   pre {
+    max-width: 100%;
     min-width: 50%;
   }
 }
@@ -559,4 +568,34 @@ pre code {
 
 .example-basic-4 div:last-child {
   width: calc((100% - (100% * (1/4))) / 1);
+}
+
+[class^="example-loops"] {
+  margin-bottom: calc(1em - 5px);
+}
+
+[class^="example-loops"] > * > * {
+  height: 30px;
+  border-radius: 5px;
+  background: rgb(100,84,158);
+  margin-bottom: 5px !important;
+  color: white;
+  text-align: center;
+  line-height: 30px;
+}
+
+.example-loops-1 .grid {
+  background: tomato;
+}
+
+.example-loops-1 .grid::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.example-loops-1 .column {
+  float: left;
+  width: calc(100% * 1/3 - (30px - 30px * 1/3));
+  margin: 0 15px;
 }
