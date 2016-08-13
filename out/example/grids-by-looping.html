@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Grids by Looping | postcss-ant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <!--[if IE]>
+      <div class="browserupgrade"><p>You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p></div>
+    <![endif]-->
+
+
+    <div class="overlay"></div>
+
+    <button class="sidebar-button">
+      <span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <div class="wrap">
+      <div class="sidebar">
+        <a href="/" class="logo">
+          <img src="/img/postcss-ant-logo.svg">
+        </a>
+
+        <p>
+          A size-getting function that accepts fractions, decimals, fixed numbers, and everything <b>in-between</b>.
+        </p>
+
+        <nav>
+          <h3>Introduction</h3>
+          <div class="submenu">
+            <a href="/#what-is-ant">What is ant?</a>
+            <a href="/#api">API</a>
+            <a href="/#postcss-ant-vs-flexbox">postcss-ant vs Flexbox</a>
+            <a href="/#flexboxs-strengths">Flexbox's Strengths</a>
+            <a href="/#why-postcss">Why PostCSS?</a>
+            <a href="/#postcss-calc">postcss-calc</a>
+            <a href="/#browser-support">Browser Support</a>
+          </div>
+
+          <h3>Usage</h3>
+          <div class="submenu">
+            <a href="/usage#integrations">Integrations</a>
+            <a href="/usage#postcss-cli">postcss-cli</a>
+            <a href="/usage#nodejs">Node.js</a>
+            <a href="/usage#gulp">Gulp</a>
+            <a href="/usage#contribute-your-own-integration">Contribute your own integration</a>
+          </div>
+
+          <h3>Examples</h3>
+          <div class="submenu">
+            <a href="/example/basic-usage">Basic Usage</a>
+            <a href="/example/grids-by-looping">Grids by Looping</a>
+            <a href="/example/asymmetrical-grids">Asymmetrical Grids</a>
+            <a href="/example/combined-with-flexbox">Combined with Flexbox</a>
+            <a href="/example/combined-with-the-grid-layout-spec">Combined with The Grid Layout Spec</a>
+          </div>
+        </nav>
+      </div>
+
+      <main>
+        <h2 id="grids-by-looping">Grids by Looping</h2>
+
+<p>There are 2 types of popular grid systems:</p>
+
+<ol>
+  <li>markup-based grids like Bootstrap. They can accept elements of varying sizes, but produce extra markup (sometimes a lot).</li>
+  <li>nth-based grids like Jeet. They use <code class="highlighter-rouge">nth</code> selectors to have light markup, but can be hard to work with when using elements of varying sizes.</li>
+</ol>
+
+<p>There is no perfect balance and <strong>you should always pick the system you need for the job</strong>. If you’re making a gallery of pictures and want it to have a mosaic look, a markup-based grid is probably your best bet. In most cases you can get away with light markup nth-based grids.</p>
+
+<p><em>Preprocessor loops + nth-grids + ant</em> introduce something new to the grid game: light markup and irregular, though patterned, grids. Not perfect, but a new tool for the toolbox that can completely replace old nth-grids.</p>
+
+<p>In nth-grids like Lost, Jeet, etc. you might specify a grid as such:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.column</span> <span class="p">{</span>
+  <span class="na">lost-column</span><span class="p">:</span> <span class="m">1</span><span class="o">/</span><span class="m">4</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>If this were going to span more than one row, each <code class="highlighter-rouge">.column</code> would need to be 1/4 the width of the container with spaces for a gutter between them.</p>
+
+<p>These grid systems do too much. They assume you’re bad at CSS and try to add it all for you. As a result, you end up with <strong>a lot</strong> of unmanageable bloat.</p>
+
+<p>ant’s different and this is why I call it a “size-getter” instead of a grid system. It simply returns a grid-friendly size to you. You do what you want with it.</p>
+
+<h4 id="example-spana-single-row-gridspan">Example: <span>A Single Row Grid</span></h4>
+
+      </main>
+    </div>
+
+    <script src="/js/lib/zepto.min.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

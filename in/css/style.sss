@@ -1,0 +1,436 @@
+@import 'reeeset.min.css'
+
+// postcss-ant website
+
+// Breakpoints
+$bp: 800px
+
+// Colors
+$light-gray: 204, 204, 204
+$light-blue: 100, 84, 158
+$medium-blue: 78, 66, 124
+$dark-blue: 62, 51, 108
+$light-red: 227, 84, 84
+$medium-red: 227, 59, 59
+$off-black: 34, 34, 34
+
+// Mixins
+@define-mixin clearfix
+  &::after
+    content: ''
+    display: table
+    clear: both
+
+@define-mixin edit
+  *
+    background: color(dodgerblue a(5%))
+
+@define-mixin trans $speed: 500ms
+  transition: all $(speed) ease
+
+// Styles
+html
+  color: rgb($off-black)
+  font-size: 13px
+  line-height: 1.75
+
+hr
+  border: 0
+  height: 1px
+  background: rgb($light-gray)
+  margin: 30px 0 !important
+
+.wrap
+  @mixin clearfix
+
+.overlay
+  display: none
+  position: fixed
+  z-index: 1
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  background: color(black a(75%))
+
+.sidebar-button
+  @mixin trans
+  display: none
+  position: fixed
+  z-index: 1
+  width: 45px
+  height: 45px
+  border-radius: 50%
+  top: 22.5px
+  right: 22.5px
+  background: color(white a(35%))
+  &.js-active
+    background: none
+    color: white
+    border-color: white
+    &:hover
+      background: white
+      color: rgb($off-black)
+  outline: none
+  font-size: 28px
+  line-height: 0
+  border: 2px solid rgb($off-black)
+  color: rgb($off-black)
+  &:hover
+    background: rgb($off-black)
+    color: white
+    > span
+      > span
+        background: white
+  > span
+    position: relative
+    top: -1px
+    > span
+      display: block
+      height: 2px
+      background: rgb($off-black)
+      width: 50%
+      margin: auto auto 4px
+      &:first-child
+        margin-top: 8px
+
+.mobile
+  .sidebar-button
+    display: block
+  .sidebar
+    width: auto
+    right: 90px
+
+.sidebar
+  display: none
+  position: fixed
+  z-index: 2
+  width: 300px
+  top: 0
+  bottom: 0
+  left: 0
+  overflow-y: auto
+  background: white
+  color: $off-black
+  padding-bottom: 30px
+  border-right: 1px solid color(white blackness(5%))
+  @media (min-width: $bp)
+    display: block
+    h3
+      padding: 5px 30px
+
+  > p
+    margin: auto 30px 30px
+    font-size: 11px
+    text-align: center
+    font-family: monospace, monospace
+
+  > nav
+    border-top: 1px solid color(white blackness(5%))
+
+  h3
+    color: rgb($off-black)
+    font-size: 13px
+    padding: 15px 30px
+    border-bottom: 1px solid color(white blackness(5%))
+    margin: 0
+    line-height: 1.5
+
+.submenu
+  > a
+    @mixin trans
+    font-size: 11px
+    padding: 15px 35px
+    text-decoration: none
+    border-bottom: 1px solid color(white blackness(5%))
+    display: block
+    color: rgb($light-blue)
+    &:hover
+      background: color(white blackness(1%))
+      padding-left: 37px
+    @media (min-width: $bp)
+      padding: 5px 35px
+
+.logo
+  background: white
+  display: block
+  width: 200px
+  height: 200px
+  margin: 30px auto
+  padding: 5px
+  position: relative
+  box-shadow: 0 0 0 1px color(rgb($light-blue) lightness(95%))
+  border-radius: 50%
+  &:hover
+    &::after
+      transform: rotate(360deg)
+  &::after
+    @mixin trans 30s
+    content: ''
+    transform-origin: center
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    margin: auto
+    width: 95%
+    height: 95%
+    border: 1px dashed color(rgb($light-blue) lightness(95%))
+    border-radius: 50%
+  > img
+    display: block
+    margin: auto
+    position: relative
+    top: 50%
+    transform: translateY(-50%)
+
+main
+  position: fixed
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  padding: 0 30px 30px
+  background: color(white blackness(1%))
+  overflow-y: auto
+  @media (min-width: $bp)
+    left: 300px
+
+  > h2
+    font-family: monospace, monospace
+    font-weight: 100
+    text-transform: lowercase
+    padding-top: 30px
+
+  > *:not(h2)
+    margin-bottom: 1em
+
+  h3, h4, h5, h6
+    margin-top: 30px
+
+  h4
+    font-size: 11px
+    text-transform: uppercase
+    letter-spacing: .25em
+    color: rgb($light-red)
+    span
+      color: color(white blackness(40%))
+
+  p
+    &:last-of-type
+      margin-bottom: 1em
+
+  a
+    color: rgb($light-blue)
+    text-decoration: none
+    border-bottom: 1px solid color(rgb($light-blue) lightness(90%))
+    text-shadow:
+      -1px 2px 0 white,
+      1px 2px 0 white
+    &:hover
+      border-bottom-color: white
+      color: color(rgb($light-blue) lightness(55%))
+
+ul,
+ol
+  margin-left: 1.25em
+  ul,
+  ol
+    margin-bottom: 0
+
+pre,
+code
+  font-size: 11px
+  background: color(white blackness(3%))
+  border: 1px solid color(white blackness(13%))
+  color: color(rgb($off-black) lightness(20%))
+  padding: 1px 3px
+
+pre
+  display: inline-block
+  padding: 8px 10px
+  line-height: 1.5
+  font-size: 11px
+  margin-bottom: 0
+  @media (min-width: $bp)
+    min-width: 50%
+  code
+    padding: 0
+    background: none
+    border: 0
+
+// Examples
+.wrong
+  background: rgb($medium-red) !important
+
+[class^="example-flexbox"]
+  margin-bottom: calc(1em - 5px)
+  > *
+    > *
+      height: 30px
+      border-radius: 5px
+      background: rgb($light-blue)
+      margin-bottom: 5px
+  &:not(.example-flexbox-4)
+    .products-row
+      display: flex
+    .product
+      &:nth-child(4n + 1),
+      &:nth-child(4n + 4)
+        width: 150px
+  .product
+    &:nth-child(4n + 2),
+    &:nth-child(4n + 3)
+      background: rgb($medium-blue)
+  .column
+    background: rgb($medium-blue)
+
+.example-flexbox-1
+  .product
+    &:nth-child(2),
+    &:nth-child(3)
+      flex-grow: 1
+
+.example-flexbox-2
+  .product
+    &:nth-child(2),
+    &:nth-child(3)
+      flex-grow: 1
+      max-width: calc(50% - 150px)
+
+.example-flexbox-3
+  .products-row
+    display: block
+    overflow: hidden
+  .product
+    float: left
+    &:nth-child(2),
+    &:nth-child(3)
+      width: calc(50% - 150px)
+
+.example-flexbox-4
+  .products
+    @mixin clearfix
+
+  .product
+    float: left
+    margin-right: 30px
+
+    @for $i in 1 through 4
+      &:nth-child(4n + $i)
+        width: ant(150px auto auto 150px)[$i]
+
+    &:nth-child(4n)
+      margin-right: 0
+
+    &:nth-child(4n + 1)
+      clear: left
+
+.example-flexbox-5
+  .grid
+    display: flex
+
+  .column
+    flex-grow: 1
+    margin-right: 30px
+
+    &:last-child
+      margin-right: 0
+
+.example-flexbox-6
+  .grid
+    display: flex
+    flex-wrap: wrap
+
+  .column
+    min-width: calc(100% * 1/3 - (30px - 30px * 1/3))
+    max-width: calc(100% * 1/3 - (30px - 30px * 1/3))
+    margin-right: 30px
+
+    &:nth-child(3n + 3)
+      margin-right: 0
+
+.example-flexbox-7
+  .grid
+    display: flex
+    flex-wrap: wrap
+
+  .column
+    min-width: ant(1/3)[1]
+    max-width: ant(1/3)[1]
+    margin-right: 30px
+
+    &:nth-child(3n + 3)
+      margin-right: 0
+
+.example-flexbox-8
+  .grid
+    @mixin clearfix
+
+  .column
+    float: left
+    margin-right: 30px
+
+    @for $i in 1 through 3
+      &:nth-child(3n + $i)
+        width: ant(1/3)[1]
+
+    &:nth-child(3n + 3)
+      margin-right: 0
+
+[class^="example-basic"]
+  margin-bottom: calc(1em - 5px)
+  > *
+    > *
+      height: 30px
+      border-radius: 5px
+      background: rgb($light-blue)
+      margin-bottom: 5px
+      color: white
+      text-align: center
+      line-height: 30px
+
+.example-basic-1
+  section
+    overflow: hidden
+  div
+    float: left
+    width: ant(1/2)[1]
+    &:first-child
+      margin-right: 30px
+
+.example-basic-2
+  section
+    overflow: hidden
+  div
+    float: left
+    &:first-child
+      width: ant(300px auto)[1]
+      margin-right: 30px
+    &:last-child
+      width: ant(300px auto)[2]
+
+.example-basic-3
+  section
+    overflow: hidden
+  div
+    float: left
+    &:first-child
+      width: ant(300px auto, 5px)[1]
+      margin-right: 5px
+    &:last-child
+      width: ant(300px auto, 5px)[2]
+
+.example-basic-4
+  section
+    overflow: hidden
+  div
+    $gutter: 0
+    $sizes: 1/4 auto
+    float: left
+    &:first-child
+      width: ant($sizes, $gutter)[1]
+      margin-right: $gutter
+    &:last-child
+      width: ant($sizes, $gutter)[2]

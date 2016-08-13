@@ -1,7 +1,18 @@
 {
+  "scripts": {
+    "start": "npm-run-all --parallel postcss jekyll browser-sync",
+    "postcss": "postcss -w -u precss -p sugarss -u postcss-color-function --local-plugins -u postcss-ant -o in/css/style.css in/css/style.sss",
+    "jekyll": "jekyll serve -s in -d out",
+    "browser-sync": "browser-sync start --proxy='localhost:4000' --files='out/*.html, out/css/*.css' --no-notify --no-open"
+  },
   "devDependencies": {
+    "browser-sync": "^2.14.0",
+    "npm-run-all": "^2.3.0",
     "postcss": "^5.1.2",
+    "postcss-ant": "0.0.7",
     "postcss-cli": "^2.5.2",
+    "postcss-color-function": "^2.0.1",
+    "precss": "^1.4.0",
     "sugarss": "^0.1.5"
   }
 }

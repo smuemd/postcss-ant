@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Basic Usage | postcss-ant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <!--[if IE]>
+      <div class="browserupgrade"><p>You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p></div>
+    <![endif]-->
+
+
+    <div class="overlay"></div>
+
+    <button class="sidebar-button">
+      <span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <div class="wrap">
+      <div class="sidebar">
+        <a href="/" class="logo">
+          <img src="/img/postcss-ant-logo.svg">
+        </a>
+
+        <p>
+          A size-getting function that accepts fractions, decimals, fixed numbers, and everything <b>in-between</b>.
+        </p>
+
+        <nav>
+          <h3>Introduction</h3>
+          <div class="submenu">
+            <a href="/#what-is-ant">What is ant?</a>
+            <a href="/#api">API</a>
+            <a href="/#postcss-ant-vs-flexbox">postcss-ant vs Flexbox</a>
+            <a href="/#flexboxs-strengths">Flexbox's Strengths</a>
+            <a href="/#why-postcss">Why PostCSS?</a>
+            <a href="/#postcss-calc">postcss-calc</a>
+            <a href="/#browser-support">Browser Support</a>
+          </div>
+
+          <h3>Usage</h3>
+          <div class="submenu">
+            <a href="/usage#integrations">Integrations</a>
+            <a href="/usage#postcss-cli">postcss-cli</a>
+            <a href="/usage#nodejs">Node.js</a>
+            <a href="/usage#gulp">Gulp</a>
+            <a href="/usage#contribute-your-own-integration">Contribute your own integration</a>
+          </div>
+
+          <h3>Examples</h3>
+          <div class="submenu">
+            <a href="/example/basic-usage">Basic Usage</a>
+            <a href="/example/grids-by-looping">Grids by Looping</a>
+            <a href="/example/asymmetrical-grids">Asymmetrical Grids</a>
+            <a href="/example/combined-with-flexbox">Combined with Flexbox</a>
+            <a href="/example/combined-with-the-grid-layout-spec">Combined with The Grid Layout Spec</a>
+          </div>
+        </nav>
+      </div>
+
+      <main>
+        <h2 id="basic-usage">Basic Usage</h2>
+
+<p>ant’s syntax looks like this: <code class="highlighter-rouge">ant(1/3 200px auto)[2]</code>. It expects a bunch of space-separated sizes – any number of valid CSS lengths, fractions, decimals, and even the <code class="highlighter-rouge">auto</code> keyword – and in the square brackets we’re telling it to get the second item in the group of sizes. In this contrived example, it’d simply return <code class="highlighter-rouge">200px</code>, but if you were to ask for <code class="highlighter-rouge">[1]</code> or <code class="highlighter-rouge">[3]</code> it’d return a pretty crazy <code class="highlighter-rouge">calc</code> formula.</p>
+
+<p>You can specify a gutter size (a valid CSS length) as the 2nd param to <code class="highlighter-rouge">ant()</code>. For example, notice the <code class="highlighter-rouge">0</code> in <code class="highlighter-rouge">ant(1/3, 0)[1]</code>. It would make the gutter <code class="highlighter-rouge">0</code>, effectively returning <code class="highlighter-rouge">calc(100% * 1/3)</code> (or <code class="highlighter-rouge">33.333%</code>). I refer to these as “local gutters”.</p>
+
+<p>By default, the gutter is <code class="highlighter-rouge">30px</code>, but you can change this on a global level by setting an atRule of <code class="highlighter-rouge">@ant-gutter 15px;</code>. An atRule should go at the top of a stylesheet.</p>
+
+<p>You can set both a global gutter and a local gutter. So the grids throughout your site could have a global gutter of <code class="highlighter-rouge">60px</code>, but maybe you want a particular grid to be spaced out to <code class="highlighter-rouge">90px</code> with a local gutter.</p>
+
+<h4 id="example-spanretrieving-a-sizespan">Example: <span>Retrieving a Size</span></h4>
+
+<p>Let’s start by making a 2 column grid with a 30px gutter (the default gutter size) between them. Follow along in Inspector to see the <code class="highlighter-rouge">calc</code> formulas and where the gutters are being placed.</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;section&gt;</span>
+  <span class="nt">&lt;div&gt;</span>1<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>2<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</code></pre>
+</div>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nt">section</span> <span class="p">{</span>
+  <span class="nl">overflow</span><span class="p">:</span> <span class="nb">hidden</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">div</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+
+  <span class="k">&amp;</span><span class="nd">:first-child</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">ant(1/2)[1]</code> asks ant to return a <code class="highlighter-rouge">calc</code> formula that returns 1/2 of the container’s width (100%) minus the gutter between them.</p>
+
+<p>We don’t need to set a size for each element in our grid like <code class="highlighter-rouge">ant(1/2 1/2)</code> since these sizes are identical we just need to have ant return the same <code class="highlighter-rouge">calc</code> formula for each.</p>
+
+<div class="example-basic-1">
+  <section>
+    <div>1</div>
+    <div>2</div>
+  </section>
+</div>
+
+<p>In this case, ant answers “What’s half of the container sans a 30px gutter?” with: <code class="highlighter-rouge">calc(100% * 1/2 - (30px - 30px * 1/2))</code>.</p>
+
+<h4 id="example-spanauto-sizesspan">Example: <span>Auto Sizes</span></h4>
+
+<p>Let’s change the 1st column to a fixed size of <code class="highlighter-rouge">300px</code> and the 2nd column can just fill the rest of the space. We still want a <code class="highlighter-rouge">30px</code> gutter between them.</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nt">div</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:first-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">300px</span> <span class="nb">auto</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:last-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">300px</span> <span class="nb">auto</span><span class="p">)[</span><span class="m">2</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-basic-2">
+  <section>
+    <div>1</div>
+    <div>2</div>
+  </section>
+</div>
+
+<p>The 2nd element’s <code class="highlighter-rouge">auto</code> value: <code class="highlighter-rouge">calc((100% - 300px - ((1 + 1 - 1) * 30px)) / 1)</code>. Kinda ugly but works beautifully and can be slimmed down with <a href="/#postcss-calc">postcss-calc</a>.</p>
+
+<h4 id="example-spancustom-local-guttersspan">Example: <span>Custom Local Gutters</span></h4>
+
+<p>Let’s shrink the gutter down to <code class="highlighter-rouge">5px</code>. Notice the 2nd param passed to <code class="highlighter-rouge">ant()</code> and the <code class="highlighter-rouge">margin-right</code> (our gutter):</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nt">div</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:first-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">300px</span> <span class="nb">auto</span><span class="o">,</span> <span class="m">5px</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">5px</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:last-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">300px</span> <span class="nb">auto</span><span class="p">)[</span><span class="m">2</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-basic-3">
+  <section>
+    <div>1</div>
+    <div>2</div>
+  </section>
+</div>
+
+<h4 id="example-spanpreprocessor-variablesspan">Example: <span>Preprocessor Variables</span></h4>
+
+<p>We can store our sizes and gutter in preprocessor variables and simply tweak those variables until things look how we like. Let’s get rid of the gutter completely by setting it to <code class="highlighter-rouge">0</code> and make our 1st column <code class="highlighter-rouge">1/4</code> instead of <code class="highlighter-rouge">300px</code>:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nt">div</span> <span class="p">{</span>
+  <span class="nv">$gutter</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="nv">$sizes</span><span class="p">:</span> <span class="m">1</span><span class="o">/</span><span class="m">4</span> <span class="nb">auto</span><span class="p">;</span>
+
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:first-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$sizes</span><span class="o">,</span> <span class="nv">$gutter</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="nv">$gutter</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:last-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$sizes</span><span class="o">,</span> <span class="nv">$gutter</span><span class="p">)[</span><span class="m">2</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-basic-4">
+  <section>
+    <div>1</div>
+    <div>2</div>
+  </section>
+</div>
+
+<h4 id="example-spanglobal-gutterspan">Example: <span>Global Gutter</span></h4>
+
+<p>In fact, let’s just get rid of gutters throughout our site by setting our <code class="highlighter-rouge">@ant-gutter</code> atRule. Since we’re not fooling with gutters, we can get rid of some superfluous code.</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="k">@ant-gutter</span> <span class="nt">0</span><span class="p">;</span>
+
+<span class="nt">section</span> <span class="p">{</span>
+  <span class="nl">overflow</span><span class="p">:</span> <span class="nb">hidden</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">div</span> <span class="p">{</span>
+  <span class="nv">$sizes</span><span class="p">:</span> <span class="m">1</span><span class="o">/</span><span class="m">4</span> <span class="nb">auto</span><span class="p">;</span>
+
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:first-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$sizes</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:last-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$sizes</span><span class="p">)[</span><span class="m">2</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>You could (and perhaps should) use <code class="highlighter-rouge">flex-grow</code> for these examples, but as we proceed, you’ll begin to see the incredible strength of ant.</p>
+
+      </main>
+    </div>
+
+    <script src="/js/lib/zepto.min.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

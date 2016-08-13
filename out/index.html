@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>postcss-ant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <!--[if IE]>
+      <div class="browserupgrade"><p>You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p></div>
+    <![endif]-->
+
+
+    <div class="overlay"></div>
+
+    <button class="sidebar-button">
+      <span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <div class="wrap">
+      <div class="sidebar">
+        <a href="/" class="logo">
+          <img src="/img/postcss-ant-logo.svg">
+        </a>
+
+        <p>
+          A size-getting function that accepts fractions, decimals, fixed numbers, and everything <b>in-between</b>.
+        </p>
+
+        <nav>
+          <h3>Introduction</h3>
+          <div class="submenu">
+            <a href="/#what-is-ant">What is ant?</a>
+            <a href="/#api">API</a>
+            <a href="/#postcss-ant-vs-flexbox">postcss-ant vs Flexbox</a>
+            <a href="/#flexboxs-strengths">Flexbox's Strengths</a>
+            <a href="/#why-postcss">Why PostCSS?</a>
+            <a href="/#postcss-calc">postcss-calc</a>
+            <a href="/#browser-support">Browser Support</a>
+          </div>
+
+          <h3>Usage</h3>
+          <div class="submenu">
+            <a href="/usage#integrations">Integrations</a>
+            <a href="/usage#postcss-cli">postcss-cli</a>
+            <a href="/usage#nodejs">Node.js</a>
+            <a href="/usage#gulp">Gulp</a>
+            <a href="/usage#contribute-your-own-integration">Contribute your own integration</a>
+          </div>
+
+          <h3>Examples</h3>
+          <div class="submenu">
+            <a href="/example/basic-usage">Basic Usage</a>
+            <a href="/example/grids-by-looping">Grids by Looping</a>
+            <a href="/example/asymmetrical-grids">Asymmetrical Grids</a>
+            <a href="/example/combined-with-flexbox">Combined with Flexbox</a>
+            <a href="/example/combined-with-the-grid-layout-spec">Combined with The Grid Layout Spec</a>
+          </div>
+        </nav>
+      </div>
+
+      <main>
+        <h2 id="what-is-ant">What is ant?</h2>
+
+<p>Wouldn’t it be nice if <code class="highlighter-rouge">width: auto</code> actually filled the remaining space?</p>
+
+<p>Ever wish those fancy grid systems would just return a size sans gutter instead of trying to solve every layout problem for you, forcing you to learn <em>yet another</em> “mini-language” and leaving you with a ton of headaches and code bloat?</p>
+
+<p>Finding it difficult to create a simple grid with flexbox?</p>
+
+<p>ant has solutions to these problems. Its syntax is incredibly simple, but it might become the most powerful tool in your arsenal – small-but-strong – like an ant.</p>
+
+<h2 id="api">API</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">ant(space separated sizes, optional gutter)[1-based index]</code> (please note the 1-based index)</li>
+  <li>“space separated sizes” can be valid CSS lengths, fractions, decimals, and <code class="highlighter-rouge">auto</code>(s). Example: <code class="highlighter-rouge">1/2 auto 300px auto</code></li>
+  <li>atRule (goes at top) to define a global gutter: <code class="highlighter-rouge">@ant-gutter [valid CSS length];</code> (defaults to <code class="highlighter-rouge">30px</code>)</li>
+</ul>
+
+<h4 id="examples">Examples</h4>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="c1">// Basic Layout
+</span><span class="k">@ant-gutter</span> <span class="nt">60px</span><span class="p">;</span>
+
+<span class="nc">.sidebar</span> <span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">4</span> <span class="nb">auto</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span> <span class="c1">// returns calc(1/4 sans gutter)
+</span><span class="p">}</span>
+
+<span class="nc">.content</span> <span class="p">{</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">4</span> <span class="nb">auto</span><span class="p">)[</span><span class="m">2</span><span class="p">];</span> <span class="c1">// returns calc(a percentage of whatever is left over after 1/4 sans calc)
+</span><span class="p">}</span>
+
+<span class="c1">// 4-column grid with lots of weird sizes and a custom gutter
+</span><span class="nc">.column</span> <span class="p">{</span>
+  <span class="nv">$gutter</span><span class="p">:</span> <span class="m">45px</span><span class="p">;</span>
+  <span class="nv">$sizes</span><span class="p">:</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span> <span class="nb">auto</span> <span class="m">200px</span> <span class="m">4%</span><span class="p">;</span>
+
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="nv">$gutter</span><span class="p">;</span>
+
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span>
+    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$sizes</span><span class="o">,</span> <span class="nv">$gutter</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">4</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">1</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">clear</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Flexbox 4-column grid
+</span><span class="nc">.flex-grid</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">flex-wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.flex-column</span> <span class="p">{</span>
+  <span class="nv">$flex-gutter</span><span class="p">:</span> <span class="m">15px</span><span class="p">;</span>
+  <span class="nv">$flex-sizes</span><span class="p">:</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span> <span class="nb">auto</span> <span class="m">200px</span> <span class="m">4%</span><span class="p">;</span>
+
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="nv">$flex-gutter</span><span class="p">;</span>
+
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span>
+    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
+      <span class="nl">min-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$flex-sizes</span><span class="o">,</span> <span class="nv">$flex-gutter</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
+      <span class="nl">max-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$flex-sizes</span><span class="o">,</span> <span class="nv">$flex-gutter</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">4</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>There are plenty more real-world examples with thorough explanations and demos in the sidebar.</p>
+
+<p>That’s it. Now you know ant. If you’re pretty good with preprocessor loops and can use PostCSS plugins, you can stop reading now. Enjoy your new toy.</p>
+
+<h2 id="postcss-ant-vs-flexbox">postcss-ant vs Flexbox</h2>
+
+<h4 id="tldr">TL;DR</h4>
+
+<p>ant does very predictable math and can work with gutters. Flexbox does unpredictable math and <strong>is not</strong> a replacement for grid systems. That said, <strong>the two can happily co-exist</strong> to produce some great stuff, but I personally believe we shouldn’t go out of our way to shut out older browser users <em>if</em> it provides little-to-no benefit.</p>
+
+<p>As with every single thing in the universe, pick your tools depending on the task at hand. Making a website for senior citizens? Might be a good idea to assume they aren’t on a cutting edge browser. Selling organically and ethically sourced coffee beans? Flexbox will probably work for 99% of your userbase.</p>
+
+<hr />
+
+<p>Flexbox is pretty handy for a number of things, and we all rejoiced when <code class="highlighter-rouge">flex-grow: 1</code> revealed itself as the <code class="highlighter-rouge">width: auto</code> we’ve always wanted, but <code class="highlighter-rouge">flex-grow</code> can be unpredictable, and unpredictable tools result in a lot of wasted time. Consider the following…</p>
+
+<h4 id="example-spanproduct-listingspan">Example: <span>Product Listing</span></h4>
+
+<p>The first and last item in every row should be <code class="highlighter-rouge">150px</code>. There are 2 middle items that should fill the remaining space. An implementation with flexbox might look like this:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.products-row</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.product</span> <span class="p">{</span>
+  <span class="k">&amp;</span><span class="nd">:first-child</span><span class="o">,</span>
+  <span class="k">&amp;</span><span class="nd">:last-child</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">150px</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">2</span><span class="o">),</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">flex-grow</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Seems to work pretty well until you put a dynamic number of products in it and the last item lands on one of those <code class="highlighter-rouge">flex-grow: 1</code> elements. Then your symmetry dies:</p>
+
+<div class="example-flexbox-1">
+  <div class="products-row">
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+  </div>
+
+  <div class="products-row">
+    <div class="product"></div>
+    <div class="product wrong"></div>
+  </div>
+</div>
+
+<p>If you’re pretty good at math (or don’t mind pixel-nudging), this can be solved by setting <code class="highlighter-rouge">max-width</code> to an exact size:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.product</span> <span class="p">{</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">2</span><span class="o">),</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">flex-grow</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span>
+    <span class="nl">max-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">50%</span> <span class="o">-</span> <span class="m">150px</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-flexbox-2">
+  <div class="products-row">
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+  </div>
+
+  <div class="products-row">
+    <div class="product"></div>
+    <div class="product"></div>
+  </div>
+</div>
+
+<p>But now there is <strong>no need</strong> for <code class="highlighter-rouge">flex-grow</code>. If we remove <code class="highlighter-rouge">flex-grow</code> and simplify <code class="highlighter-rouge">max-width</code> to <code class="highlighter-rouge">width</code>, it performs its purpose wonderfully – without flexbox.</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.product</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">2</span><span class="o">),</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">50%</span> <span class="o">-</span> <span class="m">150px</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-flexbox-3">
+  <div class="products-row">
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+  </div>
+
+  <div class="products-row">
+    <div class="product"></div>
+    <div class="product"></div>
+  </div>
+</div>
+
+<p>ant performs the <code class="highlighter-rouge">calc</code> math for you. In fact, ant makes it easy to pass any combination of sizes (fixed/fluid numbers, fractions/decimals, autos) as well as taking care of the math for something flexbox does nothing for: gutters.</p>
+
+<p>Here’s an example of that product listing using ant, preprocessor loops, and some clever <code class="highlighter-rouge">nth</code> selectors:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"products"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"product"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"product"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"product"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"product"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  ...
+<span class="nt">&lt;/div&gt;</span>
+</code></pre>
+</div>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.products</span> <span class="p">{</span>
+  <span class="c1">// clearfix (can/should be put into a mixin)
+</span>  <span class="err">&amp;</span><span class="p">:</span><span class="o">:</span><span class="n">after</span> <span class="p">{</span>
+    <span class="nl">content</span><span class="p">:</span> <span class="s1">''</span><span class="p">;</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="n">table</span><span class="p">;</span>
+    <span class="nl">clear</span><span class="p">:</span> <span class="nb">both</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nc">.product</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span> <span class="c1">// whatever the gutter is (ant defaults to a 30px gutter)
+</span>
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span> <span class="c1">// the 4 is the number of elements per row
+</span>    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span> <span class="c1">// again, the 4 is the number of elements per row
+</span>      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">150px</span> <span class="nb">auto</span> <span class="nb">auto</span> <span class="m">150px</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span> <span class="c1">// remove the gutter from the last element in a row
+</span>  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">1</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">clear</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span> <span class="c1">// force the first element in every row to clear the row before (helps with elements of uneven heights)
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Seems like a lot of code, but it’s not. Here is the same code cleaned up and sans comments:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.products</span> <span class="p">{</span>
+  <span class="k">@include</span> <span class="nd">clearfix</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.product</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span>
+    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">150px</span> <span class="nb">auto</span> <span class="nb">auto</span> <span class="m">150px</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">1</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">clear</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-flexbox-4">
+  <div class="products">
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+    <div class="product"></div>
+  </div>
+</div>
+
+<p>To remove the gutters, simply remove the <code class="highlighter-rouge">margin</code>s and pass <code class="highlighter-rouge">0</code> to ant’s 2nd param:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.products</span> <span class="p">{</span>
+  <span class="k">@include</span> <span class="nd">clearfix</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.product</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span>
+    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">150px</span> <span class="nb">auto</span> <span class="nb">auto</span> <span class="m">150px</span><span class="o">,</span> <span class="m">0</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span> <span class="c1">// the 0 specifies the gutter size (tinker with it)
+</span>    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">1</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">clear</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>14 lines of code.</p>
+
+<p>Compare the number of lines to flexbox’s implementation:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.products</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.product</span> <span class="p">{</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">1</span><span class="o">),</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">4</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">150px</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">2</span><span class="o">),</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">flex-grow</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span> <span class="c1">// superfluous
+</span>    <span class="nl">min-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">50%</span> <span class="o">-</span> <span class="m">150px</span><span class="p">);</span> <span class="c1">// difficult to figure out
+</span>    <span class="nl">max-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">50%</span> <span class="o">-</span> <span class="m">150px</span><span class="p">);</span> <span class="c1">// gutters not included
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>15 lines of code. 14 without the superfluous <code class="highlighter-rouge">flex-grow</code>.</p>
+
+<p>At this point, you might notice something. ant could be used to calculate those <code class="highlighter-rouge">min</code>/<code class="highlighter-rouge">max-width</code>s. It absolutely can, but in this particular use-case, there’s no particular benefit to using flexbox over a traditional implementation.</p>
+
+<p>The point is: <strong>ant is not a direct competitor to flexbox. ant does math that can be used with, or without, flexbox.</strong></p>
+
+<h4 id="rant-spanthe-gutter-problemspan">Rant: <span>The Gutter Problem</span></h4>
+
+<p>A grid isn’t just columns. It’s columns <em>and</em> gutters. Therein lies the problem…</p>
+
+<p>Consider the 2 most prevalent ways to create a grid: markup-based grids (think Bootstrap) and nth-based grids (think <a href="http://jeet.gs">Jeet</a>). Both types of these grids are attempting to solve the same problem in 2 different ways.</p>
+
+<p>This is really where ant pulls away from flexbox, but to understand how cool what ant is doing is, you have to understand <strong>The Gutter Problem</strong>.</p>
+
+<ul>
+  <li>Grids are composed of columns and gutters.</li>
+  <li>There are 2 main ways to create a gutter:
+    <ol>
+      <li>Half of the gutter on each side of a column.</li>
+      <li>The entire gutter on one side of a column.</li>
+    </ol>
+  </li>
+  <li>Where do the excess gutters go?</li>
+</ul>
+
+<p>These simple questions keep grid enthusiasts up at night.</p>
+
+<ul>
+  <li>If you put half a gutter on each side, you need a lot of extra markup to “clip” those overhanging gutters off and/or add background color to columns. (Bootstrap)</li>
+  <li>If you put the whole gutter on a single side, you need to remove the last gutter in a row but in order to do that, you need to know how many items will go in each row. (Jeet)</li>
+</ul>
+
+<p>In order for the math behind the full-gutter approach to produce fixed gutters (same size even if you nest) grids required <em>context</em> (knowing what size the parent grids were and passing that along to the current grid somehow). This resulted in expecting the developer to know a lot about what their site was going to have in it (bad for sites with lots of dynamic content) and occasionally some pretty gnarly mixin args. But it <em>did</em> remove the need for a lot of superfluous markup.</p>
+
+<p>When I began work on <a href="https://github.com/corysimmons/lost">Lost</a> I wanted to try and solve this problem and ended up discovering some <code class="highlighter-rouge">calc</code> formula that removed the need for <em>context</em> completely.</p>
+
+<p>That formula was migrated over to ant, but where ant assumes nothing about how you plan to implement your grid, you can use either (or neither) approach depending on your exact needs. This results in very slim markup <em>and</em> CSS (the Holy Grail).</p>
+
+<p>ant understands The Gutter Problem and will calculate your grid sizes into its equations whereas flexbox just assumes you won’t really need gutters and leaves it all the math up to you. Hence flexbox grid systems are typically just Bootstrap knockoffs with rows having <code class="highlighter-rouge">display: flex</code> and columns having <code class="highlighter-rouge">min</code> &amp; <code class="highlighter-rouge">max-width</code> of <code class="highlighter-rouge">100% / however many columns</code>. This is the extent of the help you get from these grid systems.</p>
+
+<p>Takeaway: Flexbox doesn’t help with gutters. Gutter math is a huge part of grid systems. Therefore flexbox isn’t a replacement for grid systems (as the W3C repeatedly states).</p>
+
+<h4 id="example-spangutter-mathspan">Example: <span>Gutter Math</span></h4>
+
+<p>Let’s say you need a simple 3-column grid system. Each column should be 1/3 of the container with a 30px gutter between them.</p>
+
+<p>A single-row flexbox implementation might look like this:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"grid"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre>
+</div>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.grid</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.column</span> <span class="p">{</span>
+  <span class="nl">flex-grow</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span>
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:last-child</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-flexbox-5">
+  <div class="grid">
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+  </div>
+</div>
+
+<p>But what happens if we add another element?</p>
+
+<div class="example-flexbox-5">
+  <div class="grid">
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column wrong"></div>
+  </div>
+</div>
+
+<p>We can add <code class="highlighter-rouge">flex-wrap</code>, but it won’t help without specified <code class="highlighter-rouge">min</code>/<code class="highlighter-rouge">max-width</code>s.</p>
+
+<p>We can use Lost’s <code class="highlighter-rouge">calc</code> formula to get the correct sizes: <code class="highlighter-rouge">calc(100% * 1/3 - (30px - 30px * 1/3))</code>. We’ll also have to use a clever <code class="highlighter-rouge">nth</code> selector. <code class="highlighter-rouge">flex-grow</code> becomes useless and can be removed:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.grid</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">flex-wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.column</span> <span class="p">{</span>
+  <span class="nl">min-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">));</span>
+  <span class="nl">max-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">));</span>
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3n</span> <span class="o">+</span> <span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-flexbox-6">
+  <div class="grid">
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+  </div>
+</div>
+
+<p>Let’s use ant <strong>with</strong> flexbox to do the math for us:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.grid</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">flex-wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.column</span> <span class="p">{</span>
+  <span class="nl">min-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span> <span class="c1">// we don't need to specify each column's width since they're all the same
+</span>  <span class="nl">max-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3n</span> <span class="o">+</span> <span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-flexbox-7">
+  <div class="grid">
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+  </div>
+</div>
+
+<p>For posterity’s sake – a float-based implementation using ant:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.grid</span> <span class="p">{</span>
+  <span class="k">@include</span> <span class="nd">clearfix</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.column</span> <span class="p">{</span>
+  <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
+  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">3</span> <span class="p">{</span>
+    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3n</span> <span class="o">+</span> <span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="example-flexbox-8">
+  <div class="grid">
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+    <div class="column"></div>
+  </div>
+</div>
+
+<h2 id="flexboxs-strengths">Flexbox’s Strengths</h2>
+
+<p>So where does flexbox really shine? Source ordering, alignment, and dynamic sizing.</p>
+
+<ul>
+  <li>Simply put, nothing compares to <code class="highlighter-rouge">order</code> for source ordering. It’s insanely easy to use, fairly predictable, and offers a way to perform vertical source ordering (pretty tricky business).</li>
+  <li>Alignment with flexbox is also pretty nice. Most of the alignment functionality can be replicated with <code class="highlighter-rouge">display: table</code>, but there are a couple scenarios that require an extra element to work. Flexbox’s alignment is very predictable and will always work with just a parent and child element.</li>
+  <li>When you don’t know the size of something flexbox can be very useful. For instance, a sticky footer with dynamic text in it. ant offers no way to detect the dynamic text element’s height.</li>
+</ul>
+
+<p>For pretty much everything else, flexbox is overhyped overkill.</p>
+
+<h2 id="why-postcss">Why PostCSS?</h2>
+
+<p>PostCSS <em>is JavaScript</em>. JavaScript is infinitely more powerful than any preprocessor could dream to be, so while it is true you could port ant to preprocessors, the syntax would change and the conditional trees aren’t of this world (my poor eyes saw it in Stylus when I was originally tinkering around with the idea).</p>
+
+<p>It would also mean maintaining 3+ codebases for the same functionality. Anytime something was tweaked, I would have to do it for each preprocessor, in their stupid preprocessor-specific languages. I’d end up missing bits and pieces and the entire thing would be bad.</p>
+
+<p>That said, feel free to port it. It’s possible, just not pretty. I highly suggest you invest that time learning PostCSS (which can be used alongside your favorite preprocessor).</p>
+
+<h2 id="postcss-calc">postcss-calc</h2>
+
+<p>ant produces some pretty insane <code class="highlighter-rouge">calc</code> formulas sometimes. They work great, but something like <code class="highlighter-rouge">calc((100% - 300px - ((1 + 1 - 1) * 30px)) / 1)</code> can look pretty ugly. For instance, <code class="highlighter-rouge">(1 + 1 - 1)</code> equals <code class="highlighter-rouge">1</code>, so why doesn’t ant just say <code class="highlighter-rouge">1</code> and trim down some of that <code class="highlighter-rouge">calc</code> madness?</p>
+
+<p>Well, it’d require quite a lot of conditionals that would obfuscate the already complicated math behind ant.</p>
+
+<p>Luckily <code class="highlighter-rouge">postcss-calc</code> was designed for this exact purpose. It will look over these formulas and simplify them a bit. The above formula simplifies to <code class="highlighter-rouge">calc((100% - 300px - 30px) / 1)</code>. It’s not perfect, but does a good enough job.</p>
+
+<p>So, process ant first, get some gnarly <code class="highlighter-rouge">calc</code> formulas, <strong>then</strong> run over it with <code class="highlighter-rouge">postcss-calc</code> to simplify them a bit.</p>
+
+<p><strong>Disclaimer:</strong> It’s possible <code class="highlighter-rouge">postcss-calc</code> could simplify something a bit too much. It has options for precision control. If you notice ant isn’t working as expected, try disabling <code class="highlighter-rouge">postcss-calc</code> first. If that fixes it, try tweaking some of <code class="highlighter-rouge">postcss-calc</code>’s options. If it continues messing up, just disable it, and open an issue at the <code class="highlighter-rouge">postcss-calc</code> repo.</p>
+
+<p>Again, gnarly <code class="highlighter-rouge">calc</code> works. <code class="highlighter-rouge">postcss-calc</code> is just for neat freaks like myself.</p>
+
+<p>We’re not using <code class="highlighter-rouge">postcss-calc</code> on this site or examples because I want the docs to match ant’s output perfectly to avoid confusion.</p>
+
+<h2 id="browser-support">Browser Support</h2>
+
+<p>IE8.</p>
+
+<p>ant wasn’t explicitly designed to address the increasingly-less-important problem of browser support, but it’s ultimately just a <code class="highlighter-rouge">calc</code> function so anywhere <code class="highlighter-rouge">calc</code> works, ant works.</p>
+
+<p>With a few polyfills (nicely wrapped up in <a href="https://github.com/corysimmons/boy">boy</a>), the float grids above should work in IE8. Your mileage may vary, but in basic tests it appears fairly seamless.</p>
+
+<p>Feel free to open issues about browser support as I’m somewhat personally interested in the topic.</p>
+
+      </main>
+    </div>
+
+    <script src="/js/lib/zepto.min.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

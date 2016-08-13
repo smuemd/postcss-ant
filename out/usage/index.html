@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Usage | postcss-ant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <!--[if IE]>
+      <div class="browserupgrade"><p>You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p></div>
+    <![endif]-->
+
+
+    <div class="overlay"></div>
+
+    <button class="sidebar-button">
+      <span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <div class="wrap">
+      <div class="sidebar">
+        <a href="/" class="logo">
+          <img src="/img/postcss-ant-logo.svg">
+        </a>
+
+        <p>
+          A size-getting function that accepts fractions, decimals, fixed numbers, and everything <b>in-between</b>.
+        </p>
+
+        <nav>
+          <h3>Introduction</h3>
+          <div class="submenu">
+            <a href="/#what-is-ant">What is ant?</a>
+            <a href="/#api">API</a>
+            <a href="/#postcss-ant-vs-flexbox">postcss-ant vs Flexbox</a>
+            <a href="/#flexboxs-strengths">Flexbox's Strengths</a>
+            <a href="/#why-postcss">Why PostCSS?</a>
+            <a href="/#postcss-calc">postcss-calc</a>
+            <a href="/#browser-support">Browser Support</a>
+          </div>
+
+          <h3>Usage</h3>
+          <div class="submenu">
+            <a href="/usage#integrations">Integrations</a>
+            <a href="/usage#postcss-cli">postcss-cli</a>
+            <a href="/usage#nodejs">Node.js</a>
+            <a href="/usage#gulp">Gulp</a>
+            <a href="/usage#contribute-your-own-integration">Contribute your own integration</a>
+          </div>
+
+          <h3>Examples</h3>
+          <div class="submenu">
+            <a href="/example/basic-usage">Basic Usage</a>
+            <a href="/example/grids-by-looping">Grids by Looping</a>
+            <a href="/example/asymmetrical-grids">Asymmetrical Grids</a>
+            <a href="/example/combined-with-flexbox">Combined with Flexbox</a>
+            <a href="/example/combined-with-the-grid-layout-spec">Combined with The Grid Layout Spec</a>
+          </div>
+        </nav>
+      </div>
+
+      <main>
+        <h2 id="integrations">Integrations</h2>
+
+<p>ant is a PostCSS plugin. PostCSS is a JavaScript program that looks at input CSS, alters it, and spits out some output CSS. Autoprefixer is a good example of a PostCSS plugin you’re probably familiar with. It looks at an input file for CSS <em>declarations</em> (e.g. <code class="highlighter-rouge">transform: rotate(90deg);</code>) and when it stumbles upon one that matches its set of rules, it alters it and spits out an output file with slightly different CSS.</p>
+
+<p>Kind of like preprocessor mixins, except with all the power of JavaScript. It can be a little tricky to use at first, but is well worth taking a coffee break to tinker with.</p>
+
+<p>These bare-bones, step-by-step, examples should result in the following input and output.</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="c1">// input
+</span><span class="nt">a</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span> <span class="p">}</span>
+
+<span class="c1">// output
+</span><span class="nt">a</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">));</span> <span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Hopefully they’ll get you started with your favorite build tool and PostCSS plugins. If you have any questions about how to add more PostCSS plugins, or use a particular preprocessor with these solutions, just ping me via GitHub <a href="https://github.com/corysimmons/postcss-ant/issues">issues</a> and we can work through it together (then improve these docs).</p>
+
+<p>A lot of the examples have a lot of similar steps. Here is what they all do:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">mkdir -p ~/Desktop/playground/ant/foo</code> (creates a dummy directory to test these examples out before fighting with them in a real-world project)</li>
+  <li><code class="highlighter-rouge">cd ~/Desktop/playground/ant/postcss-cli</code></li>
+  <li><code class="highlighter-rouge">echo '{}' &gt; package.json</code> (creates a valid JSON <code class="highlighter-rouge">package.json</code> so we can save npm packages to it)</li>
+  <li><code class="highlighter-rouge">npm i -D ... ...</code> (installs packages from npm and saves them to <code class="highlighter-rouge">package.json</code> as development dependencies)</li>
+  <li><code class="highlighter-rouge">echo 'a { width: ant(1/2)[1]; }' &gt; in.css</code> (creates a stylesheet with a really basic ant function)</li>
+</ul>
+
+<h2 id="postcss-cli">postcss-cli</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">mkdir -p ~/Desktop/playground/ant/postcss-cli</code></li>
+  <li><code class="highlighter-rouge">cd ~/Desktop/playground/ant/postcss-cli</code></li>
+  <li><code class="highlighter-rouge">echo '{}' &gt; package.json</code></li>
+  <li><code class="highlighter-rouge">npm i -D postcss-cli postcss-ant</code></li>
+  <li><code class="highlighter-rouge">echo 'a { width: ant(1/2)[1]; }' &gt; in.css</code></li>
+  <li><code class="highlighter-rouge">node_modules/.bin/postcss -u postcss-ant -w -o out.css in.css</code></li>
+</ul>
+
+<h2 id="nodejs">Node.js</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">mkdir -p ~/Desktop/playground/ant/node</code></li>
+  <li><code class="highlighter-rouge">cd ~/Desktop/playground/ant/node</code></li>
+  <li><code class="highlighter-rouge">echo '{}' &gt; package.json</code></li>
+  <li><code class="highlighter-rouge">npm i -D postcss-ant</code></li>
+  <li><code class="highlighter-rouge">echo 'a { width: ant(1/2)[1]; }' &gt; in.css</code></li>
+</ul>
+
+<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// index.js</span>
+<span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">postcss</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'postcss'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">ant</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'postcss-ant'</span><span class="p">);</span>
+
+<span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="s1">'out.css'</span><span class="p">,</span> <span class="nx">postcss</span><span class="p">(</span><span class="nx">ant</span><span class="p">).</span><span class="nx">process</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">'in.css'</span><span class="p">,</span> <span class="s1">'utf8'</span><span class="p">)).</span><span class="nx">css</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<ul>
+  <li><code class="highlighter-rouge">node index</code></li>
+</ul>
+
+<h2 id="gulp">Gulp</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">mkdir -p ~/Desktop/playground/ant/gulp/src</code></li>
+  <li><code class="highlighter-rouge">cd ~/Desktop/playground/ant/gulp</code></li>
+  <li><code class="highlighter-rouge">echo '{}' &gt; package.json</code></li>
+  <li><code class="highlighter-rouge">npm i -D gulp gulp-postcss postcss-ant</code></li>
+  <li><code class="highlighter-rouge">echo 'a { width: ant(1/2)[1]; }' &gt; src/style.css</code></li>
+</ul>
+
+<div class="language-js highlighter-rouge"><pre class="highlight"><code><span class="c1">// gulpfile.js</span>
+<span class="kd">var</span> <span class="nx">postcss</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gulp-postcss'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">gulp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gulp'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">ant</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'postcss-ant'</span><span class="p">);</span>
+
+<span class="nx">gulp</span><span class="p">.</span><span class="nx">task</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">gulp</span><span class="p">.</span><span class="nx">src</span><span class="p">(</span><span class="s1">'./src/style.css'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">postcss</span><span class="p">([</span><span class="nx">ant</span><span class="p">]))</span>
+      <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">gulp</span><span class="p">.</span><span class="nx">dest</span><span class="p">(</span><span class="s1">'./dist'</span><span class="p">));</span>
+<span class="p">});</span>
+</code></pre>
+</div>
+
+<ul>
+  <li><code class="highlighter-rouge">gulp</code></li>
+</ul>
+
+<h2 id="contribute-your-own-integration">Contribute Your Own Integration</h2>
+
+<p>I love learning/teaching about a plethora of integrations. I’d love to see some integrations for Webpack, Browserify, Brunch, etc.</p>
+
+<p>If you’re proficient in these tools and could provide terse step-by-step directions (like above) for using ant in these environments I would really appreciate you contributing your knowledge via a GitHub <a href="https://github.com/corysimmons/postcss-ant/issues/new">issue</a>.</p>
+
+      </main>
+    </div>
+
+    <script src="/js/lib/zepto.min.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
