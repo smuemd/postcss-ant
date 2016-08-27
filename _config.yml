@@ -22,5 +22,5 @@ baseurl: "" # the subpath of your site, e.g. /blog
 # Build settings
 markdown: kramdown
 
-# Derp
-exclude: ['Gemfile', 'css/style.sss', 'css/reeeset.min.css', '*.sketch']
+# Ignore
+exclude: ['node_modules', 'Gemfile', 'css/style.sss', 'css/reeeset.min.css', '*.sketch']
