@@ -1,1 +1,2 @@
-- add markup-grid support to ant
+- test a combination of fixed units, % seems to make some fracs crap the bed (probably accurate).
+- have octocat slide in from somewhere when you hover logo

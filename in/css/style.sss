@@ -34,6 +34,9 @@ html
   font-size: 13px
   line-height: 1.75
 
+body
+  overflow-y: auto
+
 hr
   border: 0
   height: 1px
@@ -60,8 +63,8 @@ hr
   width: 45px
   height: 45px
   border-radius: 50%
-  top: 22.5px
-  right: 22.5px
+  top: 10px
+  right: 25px
   background: color(white a(75%))
   &.js-active
     background: none
@@ -83,7 +86,7 @@ hr
         background: white
   > span
     position: relative
-    top: -1px
+    top: -2px
     > span
       display: block
       height: 2px
@@ -104,13 +107,13 @@ hr
   display: none
   position: fixed
   z-index: 2
-  width: 300px
+  width: 330px
   top: 0
   bottom: 0
   left: 0
   overflow-y: auto
   background: white
-  color: $off-black
+  color: rgb($off-black)
   padding-bottom: 30px
   border-right: 1px solid color(white blackness(5%))
   @media (min-width: $bp)
@@ -144,11 +147,29 @@ hr
     border-bottom: 1px solid color(white blackness(5%))
     display: block
     color: rgb($light-blue)
+    position: relative
     &:hover
       background: color(white blackness(1%))
       padding-left: 37px
     @media (min-width: $bp)
       padding: 5px 35px
+  .coming-soon
+    display: flex
+    align-items: center
+    justify-content: center
+    position: absolute
+    right: 3px
+    top: 0
+    bottom: 0
+    > span
+      text-transform: uppercase
+      font-size: 7px
+      background: rgb($light-red)
+      color: white
+      padding: 3px 5px
+      display: inline-block
+      text-align: center
+      line-height: 1.25
 
 .logo
   background: white
@@ -194,7 +215,7 @@ main
   background: color(white blackness(1%))
   overflow-y: auto
   @media (min-width: $bp)
-    left: 300px
+    left: 330px
 
   > h2
     font-family: monospace, monospace
@@ -457,8 +478,245 @@ pre
 .example-loops-1
   .grid
     @mixin clearfix
-    background: tomato
   .column
     float: left
-    width: ant(1/3)[1]
+    margin-right: 30px
+
+    $sizes: 1/15 2/15 3/15 4/15 5/15
+
+    @for $i in 1 through 5
+      &:nth-child(5n + $i)
+        width: ant($sizes)[$i]
+
+    &:nth-child(5n)
+      margin-right: 0
+
+    &:nth-child(5n + 1)
+      clear: left
+
+.example-loops-2
+  .grid
+    @mixin clearfix
+  .column
+    float: left
+    margin-right: 5px
+
+    $sizes: 1/15 2/15 3/15 4/15 5/15
+    $gutter: 5px
+
+    @for $i in 1 through 5
+      &:nth-child(5n + $i)
+        width: ant($sizes, $gutter)[$i]
+
+    &:nth-child(5n)
+      margin-right: 0
+
+    &:nth-child(5n + 1)
+      clear: left
+
+.example-loops-3
+  .grid
+    @mixin clearfix
+    border: 2px rgb($light-red) dotted
+    border-top: 0
+    border-bottom: 0
+    padding-top: 5px
+  .column
+    float: left
+    width: ant(1/3, negative-margin)[1]
     margin: 0 15px
+
+.example-loops-4
+  .grid
+    @mixin clearfix
+    border: 2px rgb($light-red) dotted
+    border-top: 0
+    border-bottom: 0
+    padding-top: 5px
+    margin: 0 -15px
+  .column
+    float: left
+    width: ant(1/3, negative-margin)[1]
+    margin: 0 15px
+
+[class^="example-neg"]
+  margin-bottom: calc(1em - 5px)
+  > *
+    > *
+      height: 30px
+      border-radius: 5px
+      background: rgb($light-blue)
+      margin-bottom: 5px !important
+      color: white
+      text-align: center
+      line-height: 30px
+
+$gutter: 2px
+
+.example-neg-1
+  .photos
+    @mixin clearfix
+    margin: 0 -$gutter
+
+    figure
+      float: left
+      margin: 0 1px
+      width: ant(1/4, $gutter, negative-margin)[1]
+
+      &:nth-child(6),
+      &:nth-child(8)
+        width: ant(1/2, $gutter, negative-margin)[1]
+        background: rgb($medium-blue)
+
+.example-neg-2
+  .photos
+    @mixin clearfix
+    margin: 0 -$gutter
+
+    position: relative
+
+    &::before
+      content: ''
+      position: absolute
+      z-index: -1
+      border-right: 2px dotted rgb($light-red)
+      top: -5px
+      bottom: 0
+      right: 1px
+      left: 1px
+
+    figure
+      float: left
+      margin: 0 1px
+
+      $sizes: 1/7 1/5 1/3
+
+      @for $i in 1 through 3
+        &:nth-child(3n + $i)
+          width: ant($sizes, $gutter, negative-margin)[$i]
+
+.example-neg-3
+  .photos
+    @mixin clearfix
+    margin: 0 -$gutter
+
+    position: relative
+
+    &::before
+      content: ''
+      position: absolute
+      z-index: -1
+      border-right: 2px dotted rgb($light-red)
+      top: -5px
+      bottom: 0
+      right: 1px
+      left: 1px
+
+    figure
+      float: left
+      margin: 0 1px
+
+      $sizes: 1/7 1/5 1/3
+
+      @for $i in 1 through 3
+        &:nth-child(3n + $i)
+          width: ant($sizes, $gutter, negative-margin)[$i]
+
+      &:nth-child(4)
+        width: ant($sizes auto, $gutter, negative-margin)[4]
+
+.example-neg-4
+  .photos
+    @mixin clearfix
+    margin: 0 -$gutter
+
+    position: relative
+
+    &::before
+      content: ''
+      position: absolute
+      z-index: -1
+      border-right: 2px dotted rgb($light-red)
+      top: -5px
+      bottom: 0
+      right: 1px
+      left: 1px
+
+    figure
+      float: left
+      margin: 0 1px
+
+      @for $i in 1 through 3
+        &:nth-child(3n + $i)
+          width: ant(1/7 1/5 1/3, $gutter, negative-margin)[$i]
+
+      &:nth-child(4)
+        width: ant(1/7 1/5 1/3 auto, $gutter, negative-margin)[4]
+
+      &:nth-child(6)
+        width: ant(1/5 auto 1/7 1/5, $gutter, negative-margin)[2]
+
+.example-neg-5
+  .photos
+    @mixin clearfix
+    margin: 0 -$gutter
+
+    position: relative
+
+    &::before
+      content: ''
+      position: absolute
+      z-index: -1
+      border-right: 2px dotted rgb($light-red)
+      top: -5px
+      bottom: 0
+      right: 1px
+      left: 1px
+
+    figure
+      float: left
+      margin: 0 1px
+
+      @for $i in 1 through 3
+        &:nth-child(3n + $i)
+          width: ant(1/7 1/5 1/3, $gutter, negative-margin)[$i]
+
+      &:nth-child(4)
+        width: ant(1/7 1/5 1/3 auto, $gutter, negative-margin)[4]
+
+      &:nth-child(6)
+        width: ant(1/5 auto 1/7 1/5, $gutter, negative-margin)[2]
+
+      &:nth-child(10)
+        width: ant(1/3 auto 1/5, $gutter, negative-margin)[2]
+
+.example-neg-6
+  .photos
+    display: flex
+    flex-wrap: wrap
+    margin: 0 -$gutter
+
+    position: relative
+
+    &::before
+      content: ''
+      position: absolute
+      z-index: -1
+      border-right: 2px dotted rgb($light-red)
+      top: -5px
+      bottom: 0
+      right: 1px
+      left: 1px
+
+    figure
+      margin: 0 1px
+
+      @for $i in 1 through 3
+        &:nth-child(3n + $i)
+          width: ant(1/7 1/5 1/3, $gutter, negative-margin)[$i]
+
+      &:nth-child(4),
+      &:nth-child(6),
+      &:nth-child(10),
+      &:nth-child(12)
+        flex-grow: 1

@@ -9,7 +9,7 @@ ant's syntax looks like this: `ant(1/3 200px auto)[2]`. It expects a bunch of sp
 
 You can specify a gutter size (a valid CSS length) as the 2nd param to `ant()`. For example, notice the `0` in `ant(1/3, 0)[1]`. It would make the gutter `0`, effectively returning `calc(100% * 1/3)` (or `33.333%`). I refer to these as "local gutters".
 
-By default, the gutter is `30px`, but you can change this on a global level by setting an atRule of `@ant-gutter 15px;`. An atRule should go at the top of a stylesheet.
+By default, the gutter is `30px`, but you can change this on a global level by setting an atRule like `@ant-gutter 15px;`. An atRule should go at the top of a stylesheet.
 
 You can set both a global gutter and a local gutter. So the grids throughout your site could have a global gutter of `60px`, but maybe you want a particular grid to be spaced out to `90px` with a local gutter.
 
@@ -39,9 +39,9 @@ div {
 }
 ```
 
-The `ant(1/2)[1]` asks ant to return a `calc` formula that returns 1/2 of the container's width (100%) minus the gutter between them.
+We don't need to set a size for each element in our grid like `ant(1/2 1/2)`. Since these sizes are identical we just need to have ant return the same `calc` formula for each.
 
-We don't need to set a size for each element in our grid like `ant(1/2 1/2)` since these sizes are identical we just need to have ant return the same `calc` formula for each.
+The `ant(1/2)[1]` asks ant to return a `calc` formula that returns 1/2 of the container's width (100%) minus the gutter between them.
 
 <div class="example-basic-1">
   <section>

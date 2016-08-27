@@ -25,12 +25,16 @@
 
     <div class="wrap">
       <div class="sidebar">
-        <a href="/" class="logo">
+        <a href="https://github.com/corysimmons/postcss-ant" class="logo">
           <img src="/img/postcss-ant-logo.svg">
         </a>
 
         <p>
           A size-getting function that accepts fractions, decimals, fixed numbers, and everything <b>in-between</b>.
+        </p>
+
+        <p>
+          By the guy who built Jeet and Lost.
         </p>
 
         <nav>
@@ -57,10 +61,26 @@
           <h3>Examples</h3>
           <div class="submenu">
             <a href="/example/basic-usage">Basic Usage</a>
-            <a href="/example/grids-by-looping">Grids by Looping</a>
-            <a href="/example/asymmetrical-grids">Asymmetrical Grids</a>
-            <a href="/example/combined-with-flexbox">Combined with Flexbox</a>
-            <a href="/example/combined-with-the-grid-layout-spec">Combined with The Grid Layout Spec</a>
+            <a href="/example/nth-grids-and-preprocessor-looping">nth Grids and Preprocessor Looping</a>
+            <a href="/example/negative-margin-grids">negative-margin Grids</a>
+            <a href="#">
+              Combined with Flexbox
+              <span class="coming-soon">
+                <span>
+                  Coming<br>
+                  Soon
+                </span>
+              </span>
+            </a>
+            <a href="#">
+              Combined with The Grid Layout Spec
+              <span class="coming-soon">
+                <span>
+                  Coming<br>
+                  Soon
+                </span>
+              </span>
+            </a>
           </div>
         </nav>
       </div>
@@ -72,7 +92,7 @@
 
 <p>You can specify a gutter size (a valid CSS length) as the 2nd param to <code class="highlighter-rouge">ant()</code>. For example, notice the <code class="highlighter-rouge">0</code> in <code class="highlighter-rouge">ant(1/3, 0)[1]</code>. It would make the gutter <code class="highlighter-rouge">0</code>, effectively returning <code class="highlighter-rouge">calc(100% * 1/3)</code> (or <code class="highlighter-rouge">33.333%</code>). I refer to these as “local gutters”.</p>
 
-<p>By default, the gutter is <code class="highlighter-rouge">30px</code>, but you can change this on a global level by setting an atRule of <code class="highlighter-rouge">@ant-gutter 15px;</code>. An atRule should go at the top of a stylesheet.</p>
+<p>By default, the gutter is <code class="highlighter-rouge">30px</code>, but you can change this on a global level by setting an atRule like <code class="highlighter-rouge">@ant-gutter 15px;</code>. An atRule should go at the top of a stylesheet.</p>
 
 <p>You can set both a global gutter and a local gutter. So the grids throughout your site could have a global gutter of <code class="highlighter-rouge">60px</code>, but maybe you want a particular grid to be spaced out to <code class="highlighter-rouge">90px</code> with a local gutter.</p>
 
@@ -102,9 +122,9 @@
 </code></pre>
 </div>
 
-<p>The <code class="highlighter-rouge">ant(1/2)[1]</code> asks ant to return a <code class="highlighter-rouge">calc</code> formula that returns 1/2 of the container’s width (100%) minus the gutter between them.</p>
+<p>We don’t need to set a size for each element in our grid like <code class="highlighter-rouge">ant(1/2 1/2)</code>. Since these sizes are identical we just need to have ant return the same <code class="highlighter-rouge">calc</code> formula for each.</p>
 
-<p>We don’t need to set a size for each element in our grid like <code class="highlighter-rouge">ant(1/2 1/2)</code> since these sizes are identical we just need to have ant return the same <code class="highlighter-rouge">calc</code> formula for each.</p>
+<p>The <code class="highlighter-rouge">ant(1/2)[1]</code> asks ant to return a <code class="highlighter-rouge">calc</code> formula that returns 1/2 of the container’s width (100%) minus the gutter between them.</p>
 
 <div class="example-basic-1">
   <section>

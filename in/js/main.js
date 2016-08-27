@@ -35,6 +35,12 @@ $('.sidebar-button').click(function () {
   }
 });
 
+$('.sidebar a').click(function () {
+  if ($(window).width() <= 800) {
+    closeSidebar();
+  }
+});
+
 // Throttle
 var didResize = false;
 

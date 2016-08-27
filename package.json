@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "npm-run-all --parallel postcss jekyll browser-sync",
-    "postcss": "postcss -w -u precss -p sugarss -u postcss-color-function --local-plugins -u postcss-ant -o in/css/style.css in/css/style.sss",
+    "postcss": "postcss -w -u precss -p sugarss -u postcss-color-function --local-plugins -u './ant.js' -o in/css/style.css in/css/style.sss",
     "jekyll": "jekyll serve -s in -d out",
     "browser-sync": "browser-sync start --proxy='localhost:4000' --files='out/*.html, out/css/*.css' --no-notify --no-open"
   },

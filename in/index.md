@@ -14,9 +14,21 @@ ant has solutions to these problems. Its syntax is incredibly simple, but it mig
 
 ## API
 
-- `ant(space separated sizes, optional gutter)[1-based index]` (please note the 1-based index)
+- `ant(space separated sizes, optional gutter, optional grid type)[1-based index]`
 - "space separated sizes" can be valid CSS lengths, fractions, decimals, and `auto`(s). Example: `1/2 auto 300px auto`
-- atRule (goes at top) to define a global gutter: `@ant-gutter [valid CSS length];` (defaults to `30px`)
+- The gutter can be any valid CSS length.
+- The grid type can be `nth` or `negative-margin`.
+  - `nth` grids leave room for a gutter on a single side of the element, usually ending the last item in a row with `margin-right: 0`.
+  - `negative-margin` grids expect margins on both sides of the element, requiring a wrapping element with negative margins on each side.
+  - Refer to the Examples section in the sidebar for a clearer understanding.
+- It doesn't matter what order the gutter and grid type are defined in (e.g. `ant(1/2 auto, 45px)` and `ant(1/2 auto, negative-margin)` will both work) but the sizes list should always be the first argument. Obviously all 3 parameters can be filled (e.g. `ant(100px auto, 60px, negative-margin)[2]`).
+- Please note the **1-based index**. It's 1-based to match how `nth` selectors count things (making it easier for preprocessor looping). It will fetch a size from your list of sizes (e.g. `ant(100px 200px 300px)[1]` will return `100px` whereas `[2]` would return `200px`).
+
+#### Global Settings
+atRules are used to define a global settings (this is standard in PostCSS plugins).
+
+- `@ant-gutter [valid CSS length];` (defaults to `30px`)
+- `@ant-type [nth or negative-margin];` (defaults to `nth`)
 
 #### Examples
 
@@ -40,18 +52,31 @@ ant has solutions to these problems. Its syntax is incredibly simple, but it mig
   float: left;
   margin-right: $gutter;
 
+  /*
+    A preprocessor loop that creates things like:
+    &:nth-child(4n + 1) {
+      width: ant(1/3 auto 200px 4%, 45px)[1];
+    }
+
+    &:nth-child(4n + 2) {
+      width: ant(1/3 auto 200px 4%, 45px)[2];
+    }
+
+    ...
+  */
+
   @for $i in 1 through 4 {
     &:nth-child(4n + $i) {
       width: ant($sizes, $gutter)[$i];
     }
   }
 
-  &:nth-child(4n + 4) {
-    margin-right: 0;
+  &:nth-child(4n) {
+    margin-right: 0; // remove the gutter from the last element in each row
   }
 
   &:nth-child(4n + 1) {
-    clear: left;
+    clear: left; // ensure elements of varying height line break appropriately
   }
 }
 
@@ -74,7 +99,7 @@ ant has solutions to these problems. Its syntax is incredibly simple, but it mig
     }
   }
 
-  &:nth-child(4n + 4) {
+  &:nth-child(4n) {
     margin-right: 0;
   }
 }
@@ -164,7 +189,7 @@ If you're pretty good at math (or don't mind pixel-nudging), this can be solved 
   </div>
 </div>
 
-But now there is **no need** for `flex-grow`. If we remove `flex-grow` and simplify `max-width` to `width`, it performs its purpose wonderfully -- without flexbox.
+But now there is **no need** for `flex-grow`. If we remove `flex-grow` and simplify `max-width` to `width`, it performs its purpose -- without flexbox.
 
 ```scss
 .product {
@@ -219,7 +244,7 @@ Here's an example of that product listing using ant, preprocessor loops, and som
   float: left;
   margin-right: 30px; // whatever the gutter is (ant defaults to a 30px gutter)
 
-  @for $i in 1 through 4 { // the 4 is the number of elements per row
+  @for $i in 1 through 4 { // the 4 is the number of elements per row. the $i is an iterator (e.g. 1...2...3...4)
     &:nth-child(4n + $i) { // again, the 4 is the number of elements per row
       width: ant(150px auto auto 150px)[$i];
     }
@@ -321,7 +346,7 @@ Compare the number of lines to flexbox's implementation:
 
 15 lines of code. 14 without the superfluous `flex-grow`.
 
-At this point, you might notice something. ant could be used to calculate those `min`/`max-width`s. It absolutely can, but in this particular use-case, there's no particular benefit to using flexbox over a traditional implementation.
+At this point, you might notice something. ant could be used to calculate those `min`/`max-width`s. It absolutely can (and should, since the provided example's math just happens to be simple), but in this particular use-case, there's no particular benefit to using flexbox over a traditional implementation.
 
 The point is: **ant is not a direct competitor to flexbox. ant does math that can be used with, or without, flexbox.**
 
@@ -330,7 +355,15 @@ The point is: **ant is not a direct competitor to flexbox. ant does math that ca
 
 A grid isn't just columns. It's columns *and* gutters. Therein lies the problem...
 
-Consider the 2 most prevalent ways to create a grid: markup-based grids (think Bootstrap) and nth-based grids (think [Jeet](http://jeet.gs)). Both types of these grids are attempting to solve the same problem in 2 different ways.
+Consider the 3 most prevalent ways to create a grid:
+
+1. **negative-margin** grids (Bootstrap 2)
+1. **nth** grids (Susy, [Jeet](http://jeet.gs), Neat)
+1. **padding** grids (Bootstrap 3)
+
+Padding grids produce an **insane** amount of markup for no real benefit (now that we have `calc`) so let's not even discuss them here* and just hope they die soon. (* happy to discuss this in Issues if you're particularly keen on them.)
+
+The other 2 approaches (nth and negative-margin) are trying to solve the same unsolvable problem: what do we do with excess gutter?
 
 This is really where ant pulls away from flexbox, but to understand how cool what ant is doing is, you have to understand **The Gutter Problem**.
 
@@ -353,7 +386,7 @@ That formula was migrated over to ant, but where ant assumes nothing about how y
 
 ant understands The Gutter Problem and will calculate your grid sizes into its equations whereas flexbox just assumes you won't really need gutters and leaves it all the math up to you. Hence flexbox grid systems are typically just Bootstrap knockoffs with rows having `display: flex` and columns having `min` & `max-width` of `100% / however many columns`. This is the extent of the help you get from these grid systems.
 
-Takeaway: Flexbox doesn't help with gutters. Gutter math is a huge part of grid systems. Therefore flexbox isn't a replacement for grid systems (as the W3C repeatedly states).
+Takeaway: **Flexbox doesn't help with gutters. Gutter math is a huge part of grid systems.** Therefore flexbox isn't a replacement for grid systems (as the W3C repeatedly states).
 
 #### Example: <span>Gutter Math</span>
 
@@ -493,21 +526,33 @@ For posterity's sake -- a float-based implementation using ant:
   </div>
 </div>
 
+Buuuuuuuuuuuuuuuuuuut:
+
+- What happens when you need elements of varying sizes?
+- What about when you introduce a new element and need another size?
+- Will you have to go rewrite all your previous calculations?
+- What if you want to tweak the gutter size?
+- What happens when you want `flex-grow: 1` but don't want it to break with dynamic sizing? Do you know the math to get that size?
+- etc. etc. etc.
+
+Flexbox doesn't have answers to any of these questions because... **it's not a grid system**. It don't care 'bout no dynamic number of elements! It don't care 'bout no gutter math!
+
 ## Flexbox's Strengths
 
 So where does flexbox really shine? Source ordering, alignment, and dynamic sizing.
 
 - Simply put, nothing compares to `order` for source ordering. It's insanely easy to use, fairly predictable, and offers a way to perform vertical source ordering (pretty tricky business).
-- Alignment with flexbox is also pretty nice. Most of the alignment functionality can be replicated with `display: table`, but there are a couple scenarios that require an extra element to work. Flexbox's alignment is very predictable and will always work with just a parent and child element.
+- Alignment with flexbox is also pretty nice. Most of the alignment functionality can be replicated with a `display: table-cell; vertical-alignment: x; text-align: x` container and `display: inline-block` child, but there are a few scenarios that require an extra `display: table` wrapping element to work. Flexbox's alignment is very predictable and will always work with just a parent and child element.
 - When you don't know the size of something flexbox can be very useful. For instance, a sticky footer with dynamic text in it. ant offers no way to detect the dynamic text element's height.
+- Flexbox produces slightly smaller rulesets. This is actually pretty nice/clean, but you should really consider your audience and if saving several lines of typing are worth screwing over people stuck on older browsers (they actually still exist contrary to popular belief) or dealing with flexbugs between various browsers.
 
-For pretty much everything else, flexbox is overhyped overkill.
+For pretty much everything else **flexbox is overhyped**. Flexbox Fever is actually pretty insane.
 
 ## Why PostCSS?
 
 PostCSS *is JavaScript*. JavaScript is infinitely more powerful than any preprocessor could dream to be, so while it is true you could port ant to preprocessors, the syntax would change and the conditional trees aren't of this world (my poor eyes saw it in Stylus when I was originally tinkering around with the idea).
 
-It would also mean maintaining 3+ codebases for the same functionality. Anytime something was tweaked, I would have to do it for each preprocessor, in their stupid preprocessor-specific languages. I'd end up missing bits and pieces and the entire thing would be bad.
+It would also mean maintaining 3+ codebases for the same functionality across the board. Anytime something was tweaked, I would have to do it for each preprocessor, in their stupid preprocessor-specific languages. I'd end up missing bits and pieces and the entire thing would be bad.
 
 That said, feel free to port it. It's possible, just not pretty. I highly suggest you invest that time learning PostCSS (which can be used alongside your favorite preprocessor).
 
@@ -535,4 +580,4 @@ ant wasn't explicitly designed to address the increasingly-less-important proble
 
 With a few polyfills (nicely wrapped up in [boy](https://github.com/corysimmons/boy)), the float grids above should work in IE8. Your mileage may vary, but in basic tests it appears fairly seamless.
 
-Feel free to open issues about browser support as I'm somewhat personally interested in the topic.
+Feel free to open issues about browser support as I'm somewhat personally interested in the topic from a "let's not intentionally fuck over poor people" standpoint.

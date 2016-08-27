@@ -25,12 +25,16 @@
 
     <div class="wrap">
       <div class="sidebar">
-        <a href="/" class="logo">
+        <a href="https://github.com/corysimmons/postcss-ant" class="logo">
           <img src="/img/postcss-ant-logo.svg">
         </a>
 
         <p>
           A size-getting function that accepts fractions, decimals, fixed numbers, and everything <b>in-between</b>.
+        </p>
+
+        <p>
+          By the guy who built Jeet and Lost.
         </p>
 
         <nav>
@@ -57,10 +61,26 @@
           <h3>Examples</h3>
           <div class="submenu">
             <a href="/example/basic-usage">Basic Usage</a>
-            <a href="/example/grids-by-looping">Grids by Looping</a>
-            <a href="/example/asymmetrical-grids">Asymmetrical Grids</a>
-            <a href="/example/combined-with-flexbox">Combined with Flexbox</a>
-            <a href="/example/combined-with-the-grid-layout-spec">Combined with The Grid Layout Spec</a>
+            <a href="/example/nth-grids-and-preprocessor-looping">nth Grids and Preprocessor Looping</a>
+            <a href="/example/negative-margin-grids">negative-margin Grids</a>
+            <a href="#">
+              Combined with Flexbox
+              <span class="coming-soon">
+                <span>
+                  Coming<br>
+                  Soon
+                </span>
+              </span>
+            </a>
+            <a href="#">
+              Combined with The Grid Layout Spec
+              <span class="coming-soon">
+                <span>
+                  Coming<br>
+                  Soon
+                </span>
+              </span>
+            </a>
           </div>
         </nav>
       </div>
@@ -79,9 +99,26 @@
 <h2 id="api">API</h2>
 
 <ul>
-  <li><code class="highlighter-rouge">ant(space separated sizes, optional gutter)[1-based index]</code> (please note the 1-based index)</li>
+  <li><code class="highlighter-rouge">ant(space separated sizes, optional gutter, optional grid type)[1-based index]</code></li>
   <li>“space separated sizes” can be valid CSS lengths, fractions, decimals, and <code class="highlighter-rouge">auto</code>(s). Example: <code class="highlighter-rouge">1/2 auto 300px auto</code></li>
-  <li>atRule (goes at top) to define a global gutter: <code class="highlighter-rouge">@ant-gutter [valid CSS length];</code> (defaults to <code class="highlighter-rouge">30px</code>)</li>
+  <li>The gutter can be any valid CSS length.</li>
+  <li>The grid type can be <code class="highlighter-rouge">nth</code> or <code class="highlighter-rouge">negative-margin</code>.
+    <ul>
+      <li><code class="highlighter-rouge">nth</code> grids leave room for a gutter on a single side of the element, usually ending the last item in a row with <code class="highlighter-rouge">margin-right: 0</code>.</li>
+      <li><code class="highlighter-rouge">negative-margin</code> grids expect margins on both sides of the element, requiring a wrapping element with negative margins on each side.</li>
+      <li>Refer to the Examples section in the sidebar for a clearer understanding.</li>
+    </ul>
+  </li>
+  <li>It doesn’t matter what order the gutter and grid type are defined in (e.g. <code class="highlighter-rouge">ant(1/2 auto, 45px)</code> and <code class="highlighter-rouge">ant(1/2 auto, negative-margin)</code> will both work) but the sizes list should always be the first argument. Obviously all 3 parameters can be filled (e.g. <code class="highlighter-rouge">ant(100px auto, 60px, negative-margin)[2]</code>).</li>
+  <li>Please note the <strong>1-based index</strong>. It’s 1-based to match how <code class="highlighter-rouge">nth</code> selectors count things (making it easier for preprocessor looping). It will fetch a size from your list of sizes (e.g. <code class="highlighter-rouge">ant(100px 200px 300px)[1]</code> will return <code class="highlighter-rouge">100px</code> whereas <code class="highlighter-rouge">[2]</code> would return <code class="highlighter-rouge">200px</code>).</li>
+</ul>
+
+<h4 id="global-settings">Global Settings</h4>
+<p>atRules are used to define a global settings (this is standard in PostCSS plugins).</p>
+
+<ul>
+  <li><code class="highlighter-rouge">@ant-gutter [valid CSS length];</code> (defaults to <code class="highlighter-rouge">30px</code>)</li>
+  <li><code class="highlighter-rouge">@ant-type [nth or negative-margin];</code> (defaults to <code class="highlighter-rouge">nth</code>)</li>
 </ul>
 
 <h4 id="examples">Examples</h4>
@@ -105,19 +142,32 @@
   <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
   <span class="nl">margin-right</span><span class="p">:</span> <span class="nv">$gutter</span><span class="p">;</span>
 
+  <span class="cm">/*
+    A preprocessor loop that creates things like:
+    &amp;:nth-child(4n + 1) {
+      width: ant(1/3 auto 200px 4%, 45px)[1];
+    }
+
+    &amp;:nth-child(4n + 2) {
+      width: ant(1/3 auto 200px 4%, 45px)[2];
+    }
+
+    ...
+  */</span>
+
   <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span>
     <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
       <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$sizes</span><span class="o">,</span> <span class="nv">$gutter</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
-  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">4</span><span class="o">)</span> <span class="p">{</span>
-    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span> <span class="c1">// remove the gutter from the last element in each row
+</span>  <span class="p">}</span>
 
   <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">1</span><span class="o">)</span> <span class="p">{</span>
-    <span class="nl">clear</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
-  <span class="p">}</span>
+    <span class="nl">clear</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span> <span class="c1">// ensure elements of varying height line break appropriately
+</span>  <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">// Flexbox 4-column grid
@@ -139,7 +189,7 @@
     <span class="p">}</span>
   <span class="p">}</span>
 
-  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">4</span><span class="o">)</span> <span class="p">{</span>
+  <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span><span class="o">)</span> <span class="p">{</span>
     <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -230,7 +280,7 @@
   </div>
 </div>
 
-<p>But now there is <strong>no need</strong> for <code class="highlighter-rouge">flex-grow</code>. If we remove <code class="highlighter-rouge">flex-grow</code> and simplify <code class="highlighter-rouge">max-width</code> to <code class="highlighter-rouge">width</code>, it performs its purpose wonderfully – without flexbox.</p>
+<p>But now there is <strong>no need</strong> for <code class="highlighter-rouge">flex-grow</code>. If we remove <code class="highlighter-rouge">flex-grow</code> and simplify <code class="highlighter-rouge">max-width</code> to <code class="highlighter-rouge">width</code>, it performs its purpose – without flexbox.</p>
 
 <div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.product</span> <span class="p">{</span>
   <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
@@ -284,7 +334,7 @@
   <span class="nl">float</span><span class="p">:</span> <span class="nb">left</span><span class="p">;</span>
   <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span> <span class="c1">// whatever the gutter is (ant defaults to a 30px gutter)
 </span>
-  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span> <span class="c1">// the 4 is the number of elements per row
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span> <span class="c1">// the 4 is the number of elements per row. the $i is an iterator (e.g. 1...2...3...4)
 </span>    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span> <span class="c1">// again, the 4 is the number of elements per row
 </span>      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">150px</span> <span class="nb">auto</span> <span class="nb">auto</span> <span class="m">150px</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
     <span class="p">}</span>
@@ -387,7 +437,7 @@
 
 <p>15 lines of code. 14 without the superfluous <code class="highlighter-rouge">flex-grow</code>.</p>
 
-<p>At this point, you might notice something. ant could be used to calculate those <code class="highlighter-rouge">min</code>/<code class="highlighter-rouge">max-width</code>s. It absolutely can, but in this particular use-case, there’s no particular benefit to using flexbox over a traditional implementation.</p>
+<p>At this point, you might notice something. ant could be used to calculate those <code class="highlighter-rouge">min</code>/<code class="highlighter-rouge">max-width</code>s. It absolutely can (and should, since the provided example’s math just happens to be simple), but in this particular use-case, there’s no particular benefit to using flexbox over a traditional implementation.</p>
 
 <p>The point is: <strong>ant is not a direct competitor to flexbox. ant does math that can be used with, or without, flexbox.</strong></p>
 
@@ -395,7 +445,17 @@
 
 <p>A grid isn’t just columns. It’s columns <em>and</em> gutters. Therein lies the problem…</p>
 
-<p>Consider the 2 most prevalent ways to create a grid: markup-based grids (think Bootstrap) and nth-based grids (think <a href="http://jeet.gs">Jeet</a>). Both types of these grids are attempting to solve the same problem in 2 different ways.</p>
+<p>Consider the 3 most prevalent ways to create a grid:</p>
+
+<ol>
+  <li><strong>negative-margin</strong> grids (Bootstrap 2)</li>
+  <li><strong>nth</strong> grids (Susy, <a href="http://jeet.gs">Jeet</a>, Neat)</li>
+  <li><strong>padding</strong> grids (Bootstrap 3)</li>
+</ol>
+
+<p>Padding grids produce an <strong>insane</strong> amount of markup for no real benefit (now that we have <code class="highlighter-rouge">calc</code>) so let’s not even discuss them here* and just hope they die soon. (* happy to discuss this in Issues if you’re particularly keen on them.)</p>
+
+<p>The other 2 approaches (nth and negative-margin) are trying to solve the same unsolvable problem: what do we do with excess gutter?</p>
 
 <p>This is really where ant pulls away from flexbox, but to understand how cool what ant is doing is, you have to understand <strong>The Gutter Problem</strong>.</p>
 
@@ -425,7 +485,7 @@
 
 <p>ant understands The Gutter Problem and will calculate your grid sizes into its equations whereas flexbox just assumes you won’t really need gutters and leaves it all the math up to you. Hence flexbox grid systems are typically just Bootstrap knockoffs with rows having <code class="highlighter-rouge">display: flex</code> and columns having <code class="highlighter-rouge">min</code> &amp; <code class="highlighter-rouge">max-width</code> of <code class="highlighter-rouge">100% / however many columns</code>. This is the extent of the help you get from these grid systems.</p>
 
-<p>Takeaway: Flexbox doesn’t help with gutters. Gutter math is a huge part of grid systems. Therefore flexbox isn’t a replacement for grid systems (as the W3C repeatedly states).</p>
+<p>Takeaway: <strong>Flexbox doesn’t help with gutters. Gutter math is a huge part of grid systems.</strong> Therefore flexbox isn’t a replacement for grid systems (as the W3C repeatedly states).</p>
 
 <h4 id="example-spangutter-mathspan">Example: <span>Gutter Math</span></h4>
 
@@ -565,23 +625,37 @@
   </div>
 </div>
 
+<p>Buuuuuuuuuuuuuuuuuuut:</p>
+
+<ul>
+  <li>What happens when you need elements of varying sizes?</li>
+  <li>What about when you introduce a new element and need another size?</li>
+  <li>Will you have to go rewrite all your previous calculations?</li>
+  <li>What if you want to tweak the gutter size?</li>
+  <li>What happens when you want <code class="highlighter-rouge">flex-grow: 1</code> but don’t want it to break with dynamic sizing? Do you know the math to get that size?</li>
+  <li>etc. etc. etc.</li>
+</ul>
+
+<p>Flexbox doesn’t have answers to any of these questions because… <strong>it’s not a grid system</strong>. It don’t care ‘bout no dynamic number of elements! It don’t care ‘bout no gutter math!</p>
+
 <h2 id="flexboxs-strengths">Flexbox’s Strengths</h2>
 
 <p>So where does flexbox really shine? Source ordering, alignment, and dynamic sizing.</p>
 
 <ul>
   <li>Simply put, nothing compares to <code class="highlighter-rouge">order</code> for source ordering. It’s insanely easy to use, fairly predictable, and offers a way to perform vertical source ordering (pretty tricky business).</li>
-  <li>Alignment with flexbox is also pretty nice. Most of the alignment functionality can be replicated with <code class="highlighter-rouge">display: table</code>, but there are a couple scenarios that require an extra element to work. Flexbox’s alignment is very predictable and will always work with just a parent and child element.</li>
+  <li>Alignment with flexbox is also pretty nice. Most of the alignment functionality can be replicated with a <code class="highlighter-rouge">display: table-cell; vertical-alignment: x; text-align: x</code> container and <code class="highlighter-rouge">display: inline-block</code> child, but there are a few scenarios that require an extra <code class="highlighter-rouge">display: table</code> wrapping element to work. Flexbox’s alignment is very predictable and will always work with just a parent and child element.</li>
   <li>When you don’t know the size of something flexbox can be very useful. For instance, a sticky footer with dynamic text in it. ant offers no way to detect the dynamic text element’s height.</li>
+  <li>Flexbox produces slightly smaller rulesets. This is actually pretty nice/clean, but you should really consider your audience and if saving several lines of typing are worth screwing over people stuck on older browsers (they actually still exist contrary to popular belief) or dealing with flexbugs between various browsers.</li>
 </ul>
 
-<p>For pretty much everything else, flexbox is overhyped overkill.</p>
+<p>For pretty much everything else <strong>flexbox is overhyped</strong>. Flexbox Fever is actually pretty insane.</p>
 
 <h2 id="why-postcss">Why PostCSS?</h2>
 
 <p>PostCSS <em>is JavaScript</em>. JavaScript is infinitely more powerful than any preprocessor could dream to be, so while it is true you could port ant to preprocessors, the syntax would change and the conditional trees aren’t of this world (my poor eyes saw it in Stylus when I was originally tinkering around with the idea).</p>
 
-<p>It would also mean maintaining 3+ codebases for the same functionality. Anytime something was tweaked, I would have to do it for each preprocessor, in their stupid preprocessor-specific languages. I’d end up missing bits and pieces and the entire thing would be bad.</p>
+<p>It would also mean maintaining 3+ codebases for the same functionality across the board. Anytime something was tweaked, I would have to do it for each preprocessor, in their stupid preprocessor-specific languages. I’d end up missing bits and pieces and the entire thing would be bad.</p>
 
 <p>That said, feel free to port it. It’s possible, just not pretty. I highly suggest you invest that time learning PostCSS (which can be used alongside your favorite preprocessor).</p>
 
@@ -609,7 +683,7 @@
 
 <p>With a few polyfills (nicely wrapped up in <a href="https://github.com/corysimmons/boy">boy</a>), the float grids above should work in IE8. Your mileage may vary, but in basic tests it appears fairly seamless.</p>
 
-<p>Feel free to open issues about browser support as I’m somewhat personally interested in the topic.</p>
+<p>Feel free to open issues about browser support as I’m somewhat personally interested in the topic from a “let’s not intentionally fuck over poor people” standpoint.</p>
 
       </main>
     </div>
