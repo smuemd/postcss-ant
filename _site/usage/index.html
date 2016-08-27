@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Usage | postcss-ant</title>
+    <title>Usage | postcss-ant 🐜</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/postcss-ant/css/style.css">
   </head>
@@ -11,7 +11,6 @@
     <!--[if IE]>
       <div class="browserupgrade"><p>You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p></div>
     <![endif]-->
-
 
     <div class="overlay"></div>
 
@@ -46,11 +45,13 @@
             <a href="/postcss-ant/#flexboxs-strengths">Flexbox's Strengths</a>
             <a href="/postcss-ant/#why-postcss">Why PostCSS?</a>
             <a href="/postcss-ant/#postcss-calc">postcss-calc</a>
+            <a href="/postcss-ant/#why-9999-and-99999999">Why 99.99% and 99.999999?</a>
             <a href="/postcss-ant/#browser-support">Browser Support</a>
           </div>
 
           <h3>Usage</h3>
           <div class="submenu">
+            <a href="/postcss-ant/usage#preprocessors-and-postcss">Preprocessors and PostCSS</a>
             <a href="/postcss-ant/usage#integrations">Integrations</a>
             <a href="/postcss-ant/usage#postcss-cli">postcss-cli</a>
             <a href="/postcss-ant/usage#nodejs">Node.js</a>
@@ -86,7 +87,63 @@
       </div>
 
       <main>
-        <h2 id="integrations">Integrations</h2>
+        <h2 id="preprocessors-and-postcss">Preprocessors and PostCSS</h2>
+
+<p>Preprocessors can be used with PostCSS in a variety of ways, and you should really take the time to learn how to use your favorite preprocessor with PostCSS.</p>
+
+<h4 id="postcss-parsers">PostCSS Parsers</h4>
+
+<p>The PostCSS community has rebuilt a lot of preprocessor functionality into custom plugins. You can use SCSS syntax with a plugin like PreCSS and a parser like postcss-scss (you need both).</p>
+
+<p>It’s <strong>not the same thing as SCSS</strong> so you need to use special syntax (e.g. <code class="highlighter-rouge">@define-mixin</code> rather than <code class="highlighter-rouge">@mixin</code>) and the output looks pretty gross sometimes. Quite a bit of the functionality from Sass has been ported over, but you might end up missing some of Sass’ built-in functions that haven’t been ported over.</p>
+
+<p>Here’s a sample ant grid loop using SCSS-like syntax:</p>
+
+<div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nt">div</span> <span class="p">{</span>
+  <span class="nv">$sizes</span><span class="p">:</span> <span class="m">1</span><span class="o">/</span><span class="m">4</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span> <span class="m">1</span><span class="o">/</span><span class="m">4</span><span class="p">;</span>
+
+  <span class="k">@for</span> <span class="nv">$i</span> <span class="ow">from</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">3</span> <span class="p">{</span>
+    <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$sizes</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>To get this to parse with postcss-scss, you need to do the following:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">npm i -D postcss postcss-cli postcss-ant precss postcss-scss</code></li>
+  <li>Create an <code class="highlighter-rouge">in.scss</code> file with the SCSS above.</li>
+  <li><code class="highlighter-rouge">node_modules/.bin/postcss -u precss -p postcss-scss -u postcss-ant -o out.css in.scss</code></li>
+</ul>
+
+<p>Again, the output will look pretty gross, but you should be minifying your final CSS anyway so it works pretty well.</p>
+
+<h4 id="preprocess-then-postcss">Preprocess THEN PostCSS</h4>
+
+<p>The PostCSS community gets upset when you talk about doing this because it breathes life back into preprocessor development, but you can send your stylesheets directly through their respective processor, output a <code class="highlighter-rouge">.css</code> file (or stdout), and THEN parse over that data with your PostCSS plugins.</p>
+
+<p>This technique is slower than using PostCSS’ parsers, but I kind of like it because the PostCSS parsers are pretty half-assed in comparison to the actual preprocessors (missing functionality, differing syntaxes, ugly output).</p>
+
+<p>Another caveat to be aware of is PostCSS custom syntaxes will frequently cause the preprocessor to error. For instance, SCSS has no idea what <code class="highlighter-rouge">ant()[]</code> is, so when it reaches <code class="highlighter-rouge">[]</code> it throws an error. You can work around this by using Sass’ <code class="highlighter-rouge">unquote()</code> function liberally: <code class="highlighter-rouge">width: unquote('ant(') $sizes unquote(')[') $i unquote(']');</code>.</p>
+
+<p>In Stylus you use a sprintf-like function to make this a bit better: <code class="highlighter-rouge">width: 'ant(%s)[%s]' % $sizes $i</code>. I’m not sure if Sass has a sprintf-like function. Please ping me in issues if you know of a better solution.</p>
+
+<p><em>Note: This “escaping in preprocessors” problem has been ongoing since preprocessors were invented. I just started working on a few solutions to this dilemma that should launch before the end of Sept. 2016.</em></p>
+
+<h4 id="poststylus">PostStylus</h4>
+
+<p>PostStylus actually does run through Stylus directly, but still runs into problems with custom syntaxes. I might be using it incorrectly so please ping me in issues if PostStylus can be used alongside custom syntaxes like the <code class="highlighter-rouge">ant()</code> function.</p>
+
+<h4 id="sugarss">SugarSS</h4>
+
+<p>Instead of making an official postcss-stylus parser, SugarSS was developed as PostCSS’ official preprocessor. It has Stylus-like syntax and works well with PostCSS plugins that introduce new syntax, but it’s very new and is missing a ton of nice sugar preprocessors already have (like you’re expected to replace <code class="highlighter-rouge">lighten()</code> with the W3C’s garbage <code class="highlighter-rouge">color()</code> function… pfft).</p>
+
+<p>That said, SugarSS combines processing speed with beautiful indentation syntax and will parse custom PostCSS functions without flinching. I used SugarSS on the creation of this website. If you’re interested in looking at the code, check it out in the postcss-ant GitHub repo’s <code class="highlighter-rouge">gh-pages</code> branch.</p>
+
+<h2 id="integrations">Integrations</h2>
 
 <p>ant is a PostCSS plugin. PostCSS is a JavaScript program that looks at input CSS, alters it, and spits out some output CSS. Autoprefixer is a good example of a PostCSS plugin you’re probably familiar with. It looks at an input file for CSS <em>declarations</em> (e.g. <code class="highlighter-rouge">transform: rotate(90deg);</code>) and when it stumbles upon one that matches its set of rules, it alters it and spits out an output file with slightly different CSS.</p>
 
@@ -98,7 +155,7 @@
 </span><span class="nt">a</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span> <span class="p">}</span>
 
 <span class="c1">// output
-</span><span class="nt">a</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">));</span> <span class="p">}</span>
+</span><span class="nt">a</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">99</span><span class="mi">.99%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">));</span> <span class="p">}</span>
 </code></pre>
 </div>
 

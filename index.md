@@ -572,6 +572,10 @@ Again, gnarly `calc` works. `postcss-calc` is just for neat freaks like myself.
 
 We're not using `postcss-calc` on this site or examples because I want the docs to match ant's output perfectly to avoid confusion.
 
+## Why 99.99% and 99.999999%?
+
+Browser vendors are stupid and can't agree on how to render a sub-pixel. Those %'s are as close as I could get to making all the browsers (including IE8) play nice with sub-pixel rounding issues. They might look ugly, but they work damn well, so before I accept a `100%`-only PR, I would really like to discuss what rounding issues will be affected per browser. Basically, convince me another value would work well for more visitors and I'll happily change it.
+
 ## Browser Support
 
 IE8.

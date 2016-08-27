@@ -23,4 +23,4 @@ baseurl: "/postcss-ant" # the subpath of your site, e.g. /blog
 markdown: kramdown
 
 # Ignore
-exclude: ['node_modules', 'Gemfile', 'css/style.sss', 'css/reeeset.min.css', '*.sketch']
+exclude: ['node_modules', 'README.md', 'Gemfile', 'css/style.sss', 'css/reeeset.min.css', '*.sketch']
