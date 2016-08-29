@@ -2,5 +2,6 @@
 
 - `npm i`
 - `npm start` (use browser-sync's localhost)
-- edit styles at `css/style.scss`
-- edit content at `*.html`
+- edit markup at `_layouts/default.html`
+- edit styles at `css/style.sss`
+- edit content at `*.md`, `example/*.md`, and `usage/*.md`
