@@ -12,6 +12,10 @@ Finding it difficult to create a simple grid with flexbox?
 
 ant has solutions to these problems. Its syntax is incredibly simple, but it might become the most powerful tool in your arsenal -- small-but-strong -- like an ant.
 
+## Installation
+
+`npm i -D postcss-ant`
+
 ## API
 
 - `ant(space separated sizes, optional gutter, optional grid type)[1-based index]`
