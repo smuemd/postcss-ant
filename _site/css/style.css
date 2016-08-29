@@ -153,6 +153,17 @@ hr {
   }
 }
 
+.octocat {
+  display: block;
+  width: 28px;
+  margin: auto auto 30px;
+}
+
+.octocat svg {
+  display: block;
+  margin: auto;
+}
+
 .submenu > a {
   transition: all 500ms ease;
   font-size: 11px;
