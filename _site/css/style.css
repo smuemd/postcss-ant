@@ -309,6 +309,7 @@ main a:hover {
 @media (min-width: 800px) {
   main {
     left: 330px;
+    width: calc(100% - 330px);
   }
 }
 
@@ -476,8 +477,7 @@ pre code {
 }
 
 .example-flexbox-6 .column {
-  min-width: calc(100% * 1/3 - (30px - 30px * 1/3));
-  max-width: calc(100% * 1/3 - (30px - 30px * 1/3));
+  width: calc(100% * 1/3 - (30px - 30px * 1/3));
   margin-right: 30px;
 }
 
@@ -491,8 +491,7 @@ pre code {
 }
 
 .example-flexbox-7 .column {
-  min-width: calc(99.99% * 1/3 - (30px - 30px * 1/3));
-  max-width: calc(99.99% * 1/3 - (30px - 30px * 1/3));
+  width: calc(99.99% * 1/3 - (30px - 30px * 1/3));
   margin-right: 30px;
 }
 

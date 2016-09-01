@@ -194,8 +194,7 @@
 
   <span class="k">@for</span> <span class="nv">$i</span> <span class="n">in</span> <span class="m">1</span> <span class="ow">through</span> <span class="m">4</span> <span class="p">{</span>
     <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="err">$</span><span class="nt">i</span><span class="o">)</span> <span class="p">{</span>
-      <span class="nl">min-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$flex-sizes</span><span class="o">,</span> <span class="nv">$flex-gutter</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
-      <span class="nl">max-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$flex-sizes</span><span class="o">,</span> <span class="nv">$flex-gutter</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="nv">$flex-sizes</span><span class="o">,</span> <span class="nv">$flex-gutter</span><span class="p">)[</span><span class="nv">$i</span><span class="p">];</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
@@ -421,8 +420,6 @@
 </code></pre>
 </div>
 
-<p>14 lines of code.</p>
-
 <p>Compare the number of lines to flexbox’s implementation:</p>
 
 <div class="language-scss highlighter-rouge"><pre class="highlight"><code><span class="nc">.products</span> <span class="p">{</span>
@@ -437,17 +434,13 @@
 
   <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">2</span><span class="o">),</span>
   <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">4n</span> <span class="o">+</span> <span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
-    <span class="nl">flex-grow</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span> <span class="c1">// superfluous
-</span>    <span class="nl">min-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">50%</span> <span class="o">-</span> <span class="m">150px</span><span class="p">);</span> <span class="c1">// difficult to figure out
-</span>    <span class="nl">max-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">50%</span> <span class="o">-</span> <span class="m">150px</span><span class="p">);</span> <span class="c1">// gutters not included
+    <span class="nl">width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">50%</span> <span class="o">-</span> <span class="m">150px</span><span class="p">);</span> <span class="c1">// difficult to figure out, gutters not included
 </span>  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
 </div>
 
-<p>15 lines of code. 14 without the superfluous <code class="highlighter-rouge">flex-grow</code>.</p>
-
-<p>At this point, you might notice something. ant could be used to calculate those <code class="highlighter-rouge">min</code>/<code class="highlighter-rouge">max-width</code>s. It absolutely can (and should, since the provided example’s math just happens to be simple), but in this particular use-case, there’s no particular benefit to using flexbox over a traditional implementation.</p>
+<p>At this point, you might notice something. ant could be used to calculate those <code class="highlighter-rouge">width</code>s. It absolutely can (and should, since the provided example’s math just happens to be simple), but in this particular use-case, there’s no particular benefit to using flexbox over a traditional implementation.</p>
 
 <p>The point is: <strong>ant is not a direct competitor to flexbox. ant does math that can be used with, or without, flexbox.</strong></p>
 
@@ -545,7 +538,7 @@
   </div>
 </div>
 
-<p>We can add <code class="highlighter-rouge">flex-wrap</code>, but it won’t help without specified <code class="highlighter-rouge">min</code>/<code class="highlighter-rouge">max-width</code>s.</p>
+<p>We can add <code class="highlighter-rouge">flex-wrap</code>, but it won’t help without specified <code class="highlighter-rouge">width</code>s.</p>
 
 <p>We can use Lost’s <code class="highlighter-rouge">calc</code> formula to get the correct sizes: <code class="highlighter-rouge">calc(100% * 1/3 - (30px - 30px * 1/3))</code>. We’ll also have to use a clever <code class="highlighter-rouge">nth</code> selector. <code class="highlighter-rouge">flex-grow</code> becomes useless and can be removed:</p>
 
@@ -555,8 +548,7 @@
 <span class="p">}</span>
 
 <span class="nc">.column</span> <span class="p">{</span>
-  <span class="nl">min-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">));</span>
-  <span class="nl">max-width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">));</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="nf">calc</span><span class="p">(</span><span class="m">100%</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span> <span class="nf">-</span> <span class="p">(</span><span class="m">30px</span> <span class="o">-</span> <span class="m">30px</span> <span class="o">*</span> <span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">));</span>
   <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
 
   <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3n</span> <span class="o">+</span> <span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
@@ -583,9 +575,8 @@
 <span class="p">}</span>
 
 <span class="nc">.column</span> <span class="p">{</span>
-  <span class="nl">min-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span> <span class="c1">// we don't need to specify each column's width since they're all the same
-</span>  <span class="nl">max-width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span>
-  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="nf">ant</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">3</span><span class="p">)[</span><span class="m">1</span><span class="p">];</span> <span class="c1">// we don't need to specify each column's width since they're all the same
+</span>  <span class="nl">margin-right</span><span class="p">:</span> <span class="m">30px</span><span class="p">;</span>
 
   <span class="k">&amp;</span><span class="nd">:nth-child</span><span class="o">(</span><span class="nt">3n</span> <span class="o">+</span> <span class="nt">3</span><span class="o">)</span> <span class="p">{</span>
     <span class="nl">margin-right</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>

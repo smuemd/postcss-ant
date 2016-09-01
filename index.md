@@ -98,8 +98,7 @@ atRules are used to define a global settings (this is standard in PostCSS plugin
 
   @for $i in 1 through 4 {
     &:nth-child(4n + $i) {
-      min-width: ant($flex-sizes, $flex-gutter)[$i];
-      max-width: ant($flex-sizes, $flex-gutter)[$i];
+      width: ant($flex-sizes, $flex-gutter)[$i];
     }
   }
 
@@ -324,8 +323,6 @@ To remove the gutters, simply remove the `margin`s and pass `0` to ant's 2nd par
 }
 ```
 
-14 lines of code.
-
 Compare the number of lines to flexbox's implementation:
 
 ```scss
@@ -341,16 +338,12 @@ Compare the number of lines to flexbox's implementation:
 
   &:nth-child(4n + 2),
   &:nth-child(4n + 3) {
-    flex-grow: 1; // superfluous
-    min-width: calc(50% - 150px); // difficult to figure out
-    max-width: calc(50% - 150px); // gutters not included
+    width: calc(50% - 150px); // difficult to figure out, gutters not included
   }
 }
 ```
 
-15 lines of code. 14 without the superfluous `flex-grow`.
-
-At this point, you might notice something. ant could be used to calculate those `min`/`max-width`s. It absolutely can (and should, since the provided example's math just happens to be simple), but in this particular use-case, there's no particular benefit to using flexbox over a traditional implementation.
+At this point, you might notice something. ant could be used to calculate those `width`s. It absolutely can (and should, since the provided example's math just happens to be simple), but in this particular use-case, there's no particular benefit to using flexbox over a traditional implementation.
 
 The point is: **ant is not a direct competitor to flexbox. ant does math that can be used with, or without, flexbox.**
 
@@ -440,7 +433,7 @@ But what happens if we add another element?
   </div>
 </div>
 
-We can add `flex-wrap`, but it won't help without specified `min`/`max-width`s.
+We can add `flex-wrap`, but it won't help without specified `width`s.
 
 We can use Lost's `calc` formula to get the correct sizes: `calc(100% * 1/3 - (30px - 30px * 1/3))`. We'll also have to use a clever `nth` selector. `flex-grow` becomes useless and can be removed:
 
@@ -451,8 +444,7 @@ We can use Lost's `calc` formula to get the correct sizes: `calc(100% * 1/3 - (3
 }
 
 .column {
-  min-width: calc(100% * 1/3 - (30px - 30px * 1/3));
-  max-width: calc(100% * 1/3 - (30px - 30px * 1/3));
+  width: calc(100% * 1/3 - (30px - 30px * 1/3));
   margin-right: 30px;
 
   &:nth-child(3n + 3) {
@@ -479,8 +471,7 @@ Let's use ant **with** flexbox to do the math for us:
 }
 
 .column {
-  min-width: ant(1/3)[1]; // we don't need to specify each column's width since they're all the same
-  max-width: ant(1/3)[1];
+  width: ant(1/3)[1]; // we don't need to specify each column's width since they're all the same
   margin-right: 30px;
 
   &:nth-child(3n + 3) {
