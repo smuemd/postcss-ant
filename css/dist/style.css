@@ -1,0 +1,43 @@
+body {
+  overflow-y: auto;
+}
+
+* {
+  background: rgba(0, 0, 255, 0.05);
+}
+
+div {
+  margin-bottom: 30px;
+}
+
+.grid2 {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid2 > *  {
+  margin-right: 30px;
+}
+
+.grid2 > *:nth-child(5n + 1)  {
+  width: calc(99.99% * 1/15 - (30px - 30px * 1/15));
+}
+
+.grid2 > *:nth-child(5n + 2)  {
+  width: calc(99.99% * 2/15 - (30px - 30px * 2/15));
+}
+
+.grid2 > *:nth-child(5n + 3)  {
+  width: calc(99.99% * 3/15 - (30px - 30px * 3/15));
+}
+
+.grid2 > *:nth-child(5n + 4)  {
+  width: calc(99.99% * 4/15 - (30px - 30px * 4/15));
+}
+
+.grid2 > *:nth-child(5n + 5)  {
+  width: calc(99.99% * 5/15 - (30px - 30px * 5/15));
+  margin-right: 0;
+}
+/*# sourceMappingURL=style.css.map */

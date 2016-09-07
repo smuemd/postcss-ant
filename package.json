@@ -1,18 +1,16 @@
 {
   "scripts": {
-    "start": "npm-run-all --parallel postcss jekyll browser-sync",
-    "postcss": "postcss -w -u precss -p sugarss -u postcss-color-function --local-plugins -u './ant.js' -o css/style.css css/style.sss",
+    "start": "npm-run-all -p jekyll sass postcss browser-sync",
     "jekyll": "bundle exec jekyll serve",
-    "browser-sync": "browser-sync start --proxy='localhost:4000' --files='*.html, css/*.css' --no-notify --no-open --startPath='postcss-ant/'"
+    "browser-sync": "browser-sync start --proxy='localhost:4000' --files='_site/**/*' --no-notify --no-open --startPath='postcss-ant/'",
+    "sass": "node-sass --output-style expanded --source-map true -w './css/src/style.scss' './css/src/style.css'",
+    "postcss": "postcss --map -w --local-plugins -u './ant.js' -o './css/dist/style.css' './css/src/style.css'"
   },
   "devDependencies": {
-    "browser-sync": "^2.14.0",
-    "npm-run-all": "^2.3.0",
-    "postcss": "^5.1.2",
-    "postcss-ant": "0.0.7",
-    "postcss-cli": "^2.5.2",
-    "postcss-color-function": "^2.0.1",
-    "precss": "^1.4.0",
-    "sugarss": "^0.1.5"
+    "browser-sync": "^2.14.3",
+    "cssnano": "^3.7.4",
+    "node-sass": "^3.8.0",
+    "npm-run-all": "^3.1.0",
+    "postcss-cli": "^2.6.0"
   }
 }

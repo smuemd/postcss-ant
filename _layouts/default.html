@@ -3,100 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% if page.title %}{{ page.title }} | {% endif %}postcss-ant 🐜</title>
+    <title>{% if page.title %}{{ page.title }} | {% endif %}postcss-ant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ site.baseurl }}/css/style.css">
+    <link rel="stylesheet" href="{{site.baseurl}}/css/dist/reeeset.css">
+    <link rel="stylesheet" href="{{site.baseurl}}/css/dist/style.css">
   </head>
   <body>
     <!--[if IE]>
       <div class="browserupgrade"><p>You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p></div>
     <![endif]-->
 
-    <div class="overlay"></div>
+    {{content}}
 
-    <button class="sidebar-button">
-      <span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </span>
-    </button>
-
-    <div class="wrap">
-      <div class="sidebar">
-        <a href="https://github.com/corysimmons/postcss-ant" class="logo">
-          <img src="{{ site.baseurl }}/img/postcss-ant-logo.svg">
-        </a>
-
-        <p>
-          A size-getting function that accepts fractions, decimals, fixed numbers, and everything <b>in-between</b>.
-        </p>
-
-        <p>
-          By the guy who built Jeet and Lost.
-        </p>
-
-        <a href="https://github.com/corysimmons/postcss-ant" class="octocat">
-          <svg aria-hidden="true" height="28" version="1.1" viewBox="0 0 16 16" width="28"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
-        </a>
-
-        <nav>
-          <h3>Introduction</h3>
-          <div class="submenu">
-            <a href="{{ site.baseurl }}/#what-is-ant">What is ant?</a>
-            <a href="{{ site.baseurl }}/#installation">Installation</a>
-            <a href="{{ site.baseurl }}/#api">API</a>
-            <a href="{{ site.baseurl }}/#postcss-ant-vs-flexbox">postcss-ant vs Flexbox</a>
-            <a href="{{ site.baseurl }}/#flexboxs-strengths">Flexbox's Strengths</a>
-            <a href="{{ site.baseurl }}/#why-postcss">Why PostCSS?</a>
-            <a href="{{ site.baseurl }}/#postcss-calc">postcss-calc</a>
-            <a href="{{ site.baseurl }}/#why-9999-and-99999999">Why 99.99% and 99.999999?</a>
-            <a href="{{ site.baseurl }}/#browser-support">Browser Support</a>
-          </div>
-
-          <h3>Usage</h3>
-          <div class="submenu">
-            <a href="{{ site.baseurl }}/usage#preprocessors-and-postcss">Preprocessors and PostCSS</a>
-            <a href="{{ site.baseurl }}/usage#integrations">Integrations</a>
-            <a href="{{ site.baseurl }}/usage#postcss-cli">postcss-cli</a>
-            <a href="{{ site.baseurl }}/usage#nodejs">Node.js</a>
-            <a href="{{ site.baseurl }}/usage#gulp">Gulp</a>
-            <a href="{{ site.baseurl }}/usage#contribute-your-own-integration">Contribute your own integration</a>
-          </div>
-
-          <h3>Examples</h3>
-          <div class="submenu">
-            <a href="{{ site.baseurl }}/example/basic-usage">Basic Usage</a>
-            <a href="{{ site.baseurl }}/example/nth-grids-and-preprocessor-looping">nth Grids and Preprocessor Looping</a>
-            <a href="{{ site.baseurl }}/example/negative-margin-grids">negative-margin Grids</a>
-            <a href="#">
-              Combined with Flexbox
-              <span class="coming-soon">
-                <span>
-                  Coming<br>
-                  Soon
-                </span>
-              </span>
-            </a>
-            <a href="#">
-              Combined with The Grid Layout Spec
-              <span class="coming-soon">
-                <span>
-                  Coming<br>
-                  Soon
-                </span>
-              </span>
-            </a>
-          </div>
-        </nav>
-      </div>
-
-      <main>
-        {{ content }}
-      </main>
-    </div>
-
-    <script src="{{ site.baseurl }}/js/lib/zepto.min.js"></script>
-    <script src="{{ site.baseurl }}/js/main.js"></script>
+    <script src="{{site.baseurl}}/js/lib/zepto.min.js"></script>
+    <script src="{{site.baseurl}}/js/main.js"></script>
   </body>
 </html>
