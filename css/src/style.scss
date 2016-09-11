@@ -1,98 +1,25 @@
 body {
   overflow-y: auto;
-}
-
-* {
-  background: rgba(blue, .05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  padding: 30px;
 }
 
 div {
-  margin-bottom: 30px;
+  margin-top: -50px;
 }
 
-@function rat($number_of_results: 3, $get: 0, $multiplier: 1.618) {
-  // @if $get > $number_of_results {
-  //   $number_of_results: $get;
-  // }
-  //
-  // $numerators: (1);
-  // @for $i from 1 through ($number_of_results - 1) {
-  //   $numerators: append($numerators, nth($numerators, $i) * $multiplier);
-  // }
-  //
-  // $denominator: 0;
-  // @each $numerator in $numerators {
-  //   $denominator: $denominator + $numerator;
-  // }
-  //
-  // $fractions: ();
-  // @each $numerator in $numerators {
-  //   $fractions: append($fractions, #{$numerator}/#{$denominator});
-  // }
-  //
-  // @if $get > 0 {
-  //   @return nth($fractions, $get);
-  // } @else {
-  //   @return $fractions;
-  // }
-  @return 'foo';
+img {
+  width: 200px;
 }
 
-.grid {
-  // ant:
-  //   sizes(
-  //     ratio(1.618 pow 2) // 2.617924
-  //     ratio(1.618 pow 4) // 6.85352607
-  //     ratio(1.618 pow 5) // 11.089005181
-  //   )
-  // ;
-
-  // // Works
-  // ant:
-  //   sizes(
-  //     2.617924/20.560455251 // ratio(1.618 pow 2)
-  //     6.85352607/20.560455251 // ratio(1.618 pow 4)
-  //     11.089005181/20.560455251 // ratio(1.618 pow 5)
-  //   )
-  // ;
-
-  // // Works
-  // ant:
-  //   sizes(
-  //     4.235801032/34.883973831 // ratio(1.618 pow 3)
-  //     29.030172799/34.883973831 // ratio(1.618 pow 7)
-  //     1.618/34.883973831 // ratio(1.618 pow 1)
-  //   )
-  // ;
-
-  // ant:
-  //   sizes(
-  //     150px
-  //     4.235801032/37.133973831 // ratio(1.618 pow 3)
-  //     29.030172799/37.133973831 // ratio(1.618 pow 7)
-  //     1.618/37.133973831 // ratio(1.618 pow 1)
-  //     2.25/37.133973831 // ratio(1.5 pow 2)
-  //   )
-  // ;
-
-  // Syntax
-  // ant:
-  //   sizes(
-  //     ratio(1.618 pow 3)
-  //     ratio(1.618 pow 7)
-  //     ratio(1.618 pow 1)
-  //     ratio(1.5 pow 2)
-  //   )
-  // ;
-
-  > * {
-    &:nth-child(1) {
-      // width: size(pow(1.618, 2)/pow(1.618, ));
-    }
-  }
-}
-
-.grid2 {
-  margin-top: 30px;
-  ant: sizes(1/15 2/15 3/15 4/15 5/15);
+h3 {
+  text-transform: uppercase;
+  font-size: 14px;
+  color: darken(white, 15%);
+  letter-spacing: 2px;
+  font-weight: 100;
 }
