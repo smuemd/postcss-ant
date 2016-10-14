@@ -6,6 +6,8 @@ body {
   text-align: center;
   height: 100vh;
   padding: 30px;
+  max-width: 600px;
+  margin: auto;
 }
 
 div {
