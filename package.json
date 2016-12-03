@@ -2,15 +2,15 @@
   "scripts": {
     "start": "npm-run-all -p jekyll sass postcss browser-sync",
     "jekyll": "bundle exec jekyll serve",
-    "browser-sync": "browser-sync start --proxy='localhost:4000' --files='_site/**/*' --no-notify --no-open --startPath='postcss-ant/'",
-    "sass": "node-sass --output-style expanded --source-map true -w './css/src/style.scss' './css/src/style.css'",
-    "postcss": "postcss --map -w --local-plugins -u './ant.js' -o './css/dist/style.css' './css/src/style.css'"
+    "sass": "node-sass --output-style expanded --source-map true -w css/src/style.scss css/src/style.css",
+    "postcss": "postcss --map -w --local-plugins -u postcss-ant -o css/dist/style.css css/src/style.css",
+    "browser-sync": "browser-sync start --proxy=localhost:4000 --files=_site/**/* --no-notify --no-open --startPath=postcss-ant/"
   },
   "devDependencies": {
     "browser-sync": "^2.14.3",
-    "cssnano": "^3.7.4",
     "node-sass": "^3.8.0",
     "npm-run-all": "^3.1.0",
+    "postcss-ant": "^2.1.0",
     "postcss-cli": "^2.6.0"
   }
 }

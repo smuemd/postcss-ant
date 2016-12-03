@@ -1,5 +1,5 @@
 title: postcss-ant
-email: cory@launchboxhq.com
+email: github.cory@mailhero.io
 baseurl: "/postcss-ant"
 markdown: kramdown
-exclude: ['node_modules', 'package.json', 'ant.js', 'README.md', 'Gemfile', 'css/in.scss', 'css/out.css', '*.sketch']
+exclude: ['node_modules', 'package.json', 'README.md', 'Gemfile', '*.sketch', '*.log', 'css/src', '.*']
